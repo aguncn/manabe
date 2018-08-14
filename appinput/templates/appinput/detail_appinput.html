@@ -1,0 +1,26 @@
+{% extends "manabe/template.html" %}
+{% load staticfiles %}
+{% block title %} 应用详情 {% endblock %}
+
+{% block content %}
+<table class="table table-border table-bordered radius">
+    <tbody>
+    <tr>
+        <td>APP名称</td>
+        <td>{{object}}</td>
+    </tr>
+    <tr>
+        <td>Jenkins Job</td>
+        <td>{{object.jenkins_job}}</td>
+    </tr>
+    <tr>
+        <td>是否需要重启服务</td>
+        <td>{{object.is_restart_status }}</td>
+    </tr>
+    <tr>
+        <td>最近操作用户</td>
+        <td>{{object.op_user}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endblock %}

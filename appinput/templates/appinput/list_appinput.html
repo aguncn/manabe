@@ -1,0 +1,100 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 录入应用 {% endblock %}
+
+{% block content %}
+<div>
+    <span class="l">
+    <a class="btn btn-primary radius"  href="{% url 'appinput:appinput-create' %}">
+        新建App应用
+    </a>
+    </span>
+    <span class="select-box inline r">
+        <select name="" class="select">
+            <option value="0">全部分类</option>
+            <option value="1">分类一</option>
+            <option value="2">分类二</option>
+        </select>
+        <button name="" id="" class="btn btn-success" type="submit">过滤</button>
+        <input type="text" name="" id="" placeholder=" 名称" style="width:250px" class="input-text">
+        <button name="" id="" class="btn btn-success" type="submit">搜索</button>
+    </span>
+</div>
+<br/>
+<br/>
+
+<table class="table table-border table-bordered table-bg">
+    <thead>
+    <th>
+        APP应用组件
+    </th>
+    <th>
+        jenkins job
+    </th>
+    <th>
+        是否重启
+    </th>
+    <th>
+        用户
+    </th>
+    <th>
+        操作
+    </th>
+    <th>
+        时间
+    </th>
+    </thead>
+    <tbody>
+    {% for item in object_list %}
+    <tr class="text-l">
+        <td>
+            <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
+                <a href="{% url 'appinput:appinput-detail' pk=item.id %}">
+                    {{item.name}}
+                </a>
+            </span>
+
+        </td>
+        <td>{{item.jenkins_job}}</td>
+        <td>
+            {{item.is_restart_status}}
+        </td>
+        <td>{{item.op_user}}</td>
+        <td>
+            <a href="{% url 'appinput:appinput-edit' pk=item.id %}">
+                编辑
+            </a>
+        </td>
+        <td>{{item.change_date}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<br/>
+{# pagination #}
+<div class="text-r">
+    <ul>
+        {% if page_obj.has_previous %}
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">上一页</a></li>
+        {% endif %}
+        <a href="#" >
+            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        </a>
+        {% if page_obj.has_next %}
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+</script>
+
+{% endblock %}

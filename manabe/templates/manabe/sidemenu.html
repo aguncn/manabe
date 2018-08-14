@@ -1,0 +1,64 @@
+<!--_menu 作为公共模版分离出去-->
+<aside class="Hui-aside">
+	<div class="menu_dropdown bk_2">
+		<dl id="menu-article">
+			<dt><i class="Hui-iconfont">&#xe604;</i> 发布单<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a href="article-list.html" title="资讯管理">发布单列表</a></li>
+					<li><a href="article-list.html" title="资讯管理">新建发布单</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-picture">
+			<dt><i class="Hui-iconfont">&#xe6de;</i> 环境<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a href="picture-list.html" title="图片管理">环境流转</a></li>
+					<li><a href="picture-list.html" title="图片管理">流转历史</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-product">
+			<dt><i class="Hui-iconfont">&#xe603;</i> 部署<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a href="product-brand.html" title="品牌管理">发布</a></li>
+					<li><a href="product-category.html" title="分类管理">启停</a></li>
+					<li><a href="product-list.html" title="产品管理">部署历史</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-comments">
+			<dt><i class="Hui-iconfont">&#xe61d;</i> 管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a href="{% url 'appinput:appinput-list' %}">应用列表</a></li>
+					<li><a href="{% url 'appinput:appinput-create' %}">应用录入</a></li>
+					<li><a href="http://h-ui.duoshuo.com/admin/" title="评论列表">服务器列表</a></li>
+					<li><a href="feedback-list.html" title="意见反馈">服务器录入</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-member">
+			<dt><i class="Hui-iconfont">&#xe61e;</i> 统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a href="member-list.html" title="会员列表">发布数据</a></li>
+					<li><a href="member-del.html" title="删除的会员">用户统计</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-admin">
+			<dt><i class="Hui-iconfont">&#xe623;</i> 文档<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a href="admin-role.html" title="角色管理">ChangeLog</a></li>
+					<li><a href="admin-permission.html" title="权限管理">操作文档</a></li>
+				</ul>
+			</dd>
+		</dl>
+	</div>
+</aside>
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<!--/_menu 作为公共模版分离出去-->
