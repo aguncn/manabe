@@ -32,11 +32,12 @@ urlpatterns = [
 urlpatterns += [
     path('app/', include('appinput.urls')),
 ]
-'''
+
 urlpatterns += [
-    path('cmdb/', include('cmdb.urls')),
+    path('server/', include('serverinput.urls')),
 ]
 
+'''
 urlpatterns += [
     path('deploy/', include('deploy.urls')),
 ]
@@ -49,7 +50,5 @@ urlpatterns += [
     path('right/', include('rightadmin.urls')),
 ]
 
-urlpatterns += [
-    path('server/', include('serverinput.urls')),
-]
+
 '''

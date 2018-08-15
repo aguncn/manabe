@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'appinput.apps.AppinputConfig',
-    'cmdb.apps.CmdbConfig',
     'deploy.apps.DeployConfig',
     'envx.apps.EnvxConfig',
     'rightadmin.apps.RightadminConfig',

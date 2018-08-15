@@ -35,8 +35,8 @@
 				<ul>
 					<li><a href="{% url 'appinput:appinput-list' %}">应用列表</a></li>
 					<li><a href="{% url 'appinput:appinput-create' %}">应用录入</a></li>
-					<li><a href="http://h-ui.duoshuo.com/admin/" title="评论列表">服务器列表</a></li>
-					<li><a href="feedback-list.html" title="意见反馈">服务器录入</a></li>
+					<li><a href="{% url 'serverinput:serverinput-list' %}">服务器列表</a></li>
+					<li><a href="{% url 'serverinput:serverinput-create' %}">服务器录入</a></li>
 				</ul>
 			</dd>
 		</dl>

@@ -1,12 +1,10 @@
 # coding=utf8
 
-import os
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.utils import timezone
 from django.db.models import Q
-from django.template import RequestContext
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from .forms import AppForm
 from .models import App
 
@@ -62,7 +60,6 @@ class AppInputListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
-        context['app_name'] = App.objects.get(id=self.request.GET.get('app_name')) if self.request.GET.get('app_name') else ''
         context['current_page'] = "appinput-list"
         context['current_page_name'] = "APP应用列表"
         query_string = self.request.META.get('QUERY_STRING')
@@ -93,7 +90,7 @@ class AppInputUpdateView(UpdateView):
     form_class = AppForm
 
     def get_context_data(self, **kwargs):
-        context = super(AppInputUpdateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['current_page'] = "appinput-edit"
         context['current_page_name'] = "编辑APP应用"
         context['app_id'] = self.kwargs.get(self.pk_url_kwarg, None)

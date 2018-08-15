@@ -1,13 +1,13 @@
 {% extends "manabe/template.html" %}
 
 {% load staticfiles %}
-{% block title %} 应用列表 {% endblock %}
+{% block title %} 服务器列表 {% endblock %}
 
 {% block content %}
 <div>
     <span class="l">
-    <a class="btn btn-primary radius"  href="{% url 'appinput:appinput-create' %}">
-        新建App应用
+    <a class="btn btn-primary radius"  href="{% url 'serverinput:serverinput-create' %}">
+        新建服务器
     </a>
     </span>
     <span class="select-box inline r">
@@ -27,16 +27,16 @@
 <table class="table table-border table-bordered table-bg">
     <thead>
     <th>
-        APP应用组件
+        服务器名称
     </th>
     <th>
-        jenkins job
+        ip
     </th>
     <th>
-        是否重启
+        port
     </th>
     <th>
-        用户
+        APP
     </th>
     <th>
         操作
@@ -50,19 +50,19 @@
     <tr class="text-l">
         <td>
             <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
-                <a href="{% url 'appinput:appinput-detail' pk=item.id %}">
+                <a href="{% url 'serverinput:serverinput-detail' pk=item.id %}">
                     {{item.name}}
                 </a>
             </span>
 
         </td>
-        <td>{{item.jenkins_job}}</td>
+        <td>{{item.ip_address}}</td>
         <td>
-            {{item.is_restart_status}}
+            {{item.port}}
         </td>
-        <td>{{item.op_user}}</td>
+        <td>{{item.app_name}}</td>
         <td>
-            <a href="{% url 'appinput:appinput-edit' pk=item.id %}">
+            <a href="{% url 'serverinput:serverinput-edit' pk=item.id %}">
                 编辑
             </a>
         </td>
