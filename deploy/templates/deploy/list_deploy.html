@@ -42,6 +42,9 @@
         部署类型
     </th>
     <th>
+        进度
+    </th>
+    <th>
         操作
     </th>
     <th>
@@ -71,8 +74,11 @@
             {{item.deploy_type}}
         </td>
         <td>
+            {{item.deploy_progress}}
+        </td>
+        <td>
             <a href="{% url 'deploy:edit' pk=item.id %}">
-                编辑
+                编译
             </a>
         </td>
         <td>

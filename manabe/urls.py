@@ -28,6 +28,9 @@ urlpatterns = [
     path('accounts/change-password/', login_required(change_password), name="change-password"),
 ]
 
+urlpatterns += [
+    path('public/', include('public.urls')),
+]
 
 urlpatterns += [
     path('app/', include('appinput.urls')),
@@ -37,16 +40,14 @@ urlpatterns += [
     path('server/', include('serverinput.urls')),
 ]
 
-
 urlpatterns += [
     path('deploy/', include('deploy.urls')),
 ]
 
-'''
 urlpatterns += [
     path('envx/', include('envx.urls')),
 ]
-
+'''
 urlpatterns += [
     path('right/', include('rightadmin.urls')),
 ]
