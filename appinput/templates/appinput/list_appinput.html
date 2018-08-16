@@ -6,7 +6,7 @@
 {% block content %}
 <div>
     <span class="l">
-    <a class="btn btn-primary radius"  href="{% url 'appinput:appinput-create' %}">
+    <a class="btn btn-primary radius"  href="{% url 'appinput:create' %}">
         新建App应用
     </a>
     </span>
@@ -50,7 +50,7 @@
     <tr class="text-l">
         <td>
             <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
-                <a href="{% url 'appinput:appinput-detail' pk=item.id %}">
+                <a href="{% url 'appinput:detail' pk=item.id %}">
                     {{item.name}}
                 </a>
             </span>
@@ -62,7 +62,7 @@
         </td>
         <td>{{item.op_user}}</td>
         <td>
-            <a href="{% url 'appinput:appinput-edit' pk=item.id %}">
+            <a href="{% url 'appinput:edit' pk=item.id %}">
                 编辑
             </a>
         </td>

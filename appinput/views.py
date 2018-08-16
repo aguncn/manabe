@@ -27,10 +27,10 @@ class AppInputCreateView(CreateView):
             op_user=current_user_set,
         )
         app.save()
-        return HttpResponseRedirect(reverse("appinput:appinput-list"))
+        return HttpResponseRedirect(reverse("appinput:list"))
 
     def get_success_url(self):
-        return reverse_lazy("appinput:appinput-list")
+        return reverse_lazy("appinput:list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -42,8 +42,6 @@ class AppInputCreateView(CreateView):
 
 class AppInputListView(ListView):
     template_name = 'appinput/list_appinput.html'
-    # model = App
-    # queryset = App.objects.order_by('-change_date')
     paginate_by = 4
 
     def get_queryset(self):
@@ -97,4 +95,4 @@ class AppInputUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy("appinput:appinput-list")
+        return reverse_lazy("appinput:list")

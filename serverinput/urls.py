@@ -6,13 +6,13 @@ from .views import ServerInputCreateView, ServerInputUpdateView, ServerInputDeta
 app_name = 'serverinput'
 
 urlpatterns = [
-    path('serverinput/create/', login_required(ServerInputCreateView.as_view()),
-         name='serverinput-create'),
-    path(r'serverinput/list/', login_required(ServerInputListView.as_view()),
-         name='serverinput-list'),
-    path(r'serverinput/edit/<slug:pk>/', login_required(ServerInputUpdateView.as_view()),
-         name='serverinput-edit'),
-    path(r'serverinput/view/<slug:pk>/', login_required(ServerInputDetailView.as_view()),
-         name='serverinput-detail'),
+    path('create/', login_required(ServerInputCreateView.as_view()),
+         name='create'),
+    path(r'list/', login_required(ServerInputListView.as_view()),
+         name='list'),
+    path(r'edit/<slug:pk>/', login_required(ServerInputUpdateView.as_view()),
+         name='edit'),
+    path(r'view/<slug:pk>/', login_required(ServerInputDetailView.as_view()),
+         name='detail'),
 
 ]

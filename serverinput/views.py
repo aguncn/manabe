@@ -29,10 +29,10 @@ class ServerInputCreateView(CreateView):
             op_user=current_user_set,
         )
         app.save()
-        return HttpResponseRedirect(reverse("serverinput:serverinput-list"))
+        return HttpResponseRedirect(reverse("serverinput:list"))
 
     def get_success_url(self):
-        return reverse_lazy("serverinput:serverinput-list")
+        return reverse_lazy("serverinput:list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,4 +99,4 @@ class ServerInputUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy("serverinput:serverinput-list")
+        return reverse_lazy("serverinput:list")

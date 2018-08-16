@@ -37,11 +37,12 @@ urlpatterns += [
     path('server/', include('serverinput.urls')),
 ]
 
-'''
+
 urlpatterns += [
     path('deploy/', include('deploy.urls')),
 ]
 
+'''
 urlpatterns += [
     path('envx/', include('envx.urls')),
 ]

@@ -5,8 +5,8 @@
 			<dt><i class="Hui-iconfont">&#xe604;</i> 发布单<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a href="article-list.html" title="资讯管理">发布单列表</a></li>
-					<li><a href="article-list.html" title="资讯管理">新建发布单</a></li>
+					<li><a href="{% url 'deploy:list' %}">发布单列表</a></li>
+					<li><a href="{% url 'deploy:create' %}">新建发布单</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -33,10 +33,10 @@
 			<dt><i class="Hui-iconfont">&#xe61d;</i> 管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a href="{% url 'appinput:appinput-list' %}">应用列表</a></li>
-					<li><a href="{% url 'appinput:appinput-create' %}">应用录入</a></li>
-					<li><a href="{% url 'serverinput:serverinput-list' %}">服务器列表</a></li>
-					<li><a href="{% url 'serverinput:serverinput-create' %}">服务器录入</a></li>
+					<li><a href="{% url 'appinput:list' %}">应用列表</a></li>
+					<li><a href="{% url 'appinput:create' %}">应用录入</a></li>
+					<li><a href="{% url 'serverinput:list' %}">服务器列表</a></li>
+					<li><a href="{% url 'serverinput:create' %}">服务器录入</a></li>
 				</ul>
 			</dd>
 		</dl>

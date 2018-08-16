@@ -1,13 +1,13 @@
 {% extends "manabe/template.html" %}
 
 {% load staticfiles %}
-{% block title %} 服务器列表 {% endblock %}
+{% block title %} 发布单列表 {% endblock %}
 
 {% block content %}
 <div>
     <span class="l">
-    <a class="btn btn-primary radius"  href="{% url 'serverinput:create' %}">
-        新建服务器
+    <a class="btn btn-primary radius"  href="{% url 'deploy:create' %}">
+        新建发布单
     </a>
     </span>
     <span class="select-box inline r">
@@ -27,19 +27,25 @@
 <table class="table table-border table-bordered table-bg">
     <thead>
     <th>
-        服务器名称
+        发布单名称
     </th>
     <th>
-        ip
+        所属APP
     </th>
     <th>
-        port
+        Git Branch
     </th>
     <th>
-        APP
+        Jenkins No.
+    </th>
+    <th>
+        部署类型
     </th>
     <th>
         操作
+    </th>
+    <th>
+        用户
     </th>
     <th>
         时间
@@ -50,21 +56,27 @@
     <tr class="text-l">
         <td>
             <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
-                <a href="{% url 'serverinput:detail' pk=item.id %}">
+                <a href="{% url 'deploy:detail' pk=item.id %}">
                     {{item.name}}
                 </a>
             </span>
 
         </td>
-        <td>{{item.ip_address}}</td>
-        <td>
-            {{item.port}}
-        </td>
         <td>{{item.app_name}}</td>
         <td>
-            <a href="{% url 'serverinput:edit' pk=item.id %}">
+            {{item.branch_build}}
+        </td>
+        <td>{{item.jenkins_number}}</td>
+        <td>
+            {{item.deploy_type}}
+        </td>
+        <td>
+            <a href="{% url 'deploy:edit' pk=item.id %}">
                 编辑
             </a>
+        </td>
+        <td>
+            {{item.create_user}}
         </td>
         <td>{{item.change_date}}</td>
     </tr>
