@@ -1,10 +1,14 @@
 # coding=utf8
 
+from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib import messages
 
 from deploy.models import DeployPool
+from .models import Env
 
 
 class EnvXListView(ListView):
@@ -39,4 +43,13 @@ class EnvXListView(ListView):
 
 
 def change(request):
-    pass
+    if request.POST:
+        if request.POST.get('envSelect') is None or request.POST.get('serverSelect') is None:
+            return JsonResponse({'return': 'not choose'})
+        else:
+            print(request.POST.get('serverSelect'), "@@@@@@@@@@@@@@")
+            env_name = Env.objects.get(id=request.POST.get('envSelect')).name
+            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(deploy_progress=env_name)
+            messages.error(request, '用户或密码错误', extra_tags='bg-warning text-warning')
+            return redirect('envx:list')
+

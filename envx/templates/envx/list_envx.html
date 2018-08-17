@@ -3,7 +3,21 @@
 {% load staticfiles %}
 {% block title %} 环境流转 {% endblock %}
 
+{% block ext-css %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/jquery-confirm/jquery-confirm.min.css' %}" />
+{% endblock %}
+{% block ext-jss %}
+<script type="text/javascript" src="{% static 'lib/jquery-confirm/jquery-confirm.min.js'%}"></script>
+{% endblock %}
+
 {% block content %}
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        console.log('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}
 <div>
     <span class="l">
 
@@ -21,17 +35,14 @@
 </div>
 <br/>
 <br/>
-<form action="{% url 'envx:change' %}" method="post">
+<form action="{% url 'envx:change' %}" method="post" name="envForm" id="envForm">
     {% csrf_token %}
     <div>
         <span class="select-box inline l">
-            {{ form.name }}
-            <select name="" class="select">
-                <option value="0">全部分类</option>
-                <option value="1">分类一</option>
-                <option value="2">分类二</option>
+            <select name="envSelect" id="envSelect" class="select">
+
             </select>
-            <button name="" id="" class="btn btn-danger" type="submit">环境流转</button>
+            <button name="envChange" id="envChange" class="btn btn-danger " >环境流转</button>
         </span>
     </div>
     <table class="table table-border table-bordered table-bg">
@@ -59,10 +70,9 @@
         </th>
         </thead>
         <tbody>
-
             {% for item in object_list %}
             <tr class="text-l">
-                <td><input type="checkbox" id="checkbox-1">
+                <td><input type="checkbox" name="serverSelect" value="{{ item.id }}">
                     <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
                         <a href="{% url 'deploy:detail' pk=item.id %}">
                             {{item.name}}
@@ -116,7 +126,6 @@
 
 {% block script %}
 <script>
-
+    {% include "envx/envx.js" %}
 </script>
-
 {% endblock %}
