@@ -3,21 +3,7 @@
 {% load staticfiles %}
 {% block title %} 环境流转 {% endblock %}
 
-{% block ext-css %}
-<link rel="stylesheet" type="text/css" href="{% static 'lib/jquery-confirm/jquery-confirm.min.css' %}" />
-{% endblock %}
-{% block ext-jss %}
-<script type="text/javascript" src="{% static 'lib/jquery-confirm/jquery-confirm.min.js'%}"></script>
-{% endblock %}
-
 {% block content %}
-{% if messages %}
-<script>
-    {% for msg in messages %}
-        console.log('{{ msg.message }}');
-    {% endfor %}
-</script>
-{% endif %}
 <div>
     <span class="l">
 
@@ -42,7 +28,8 @@
             <select name="envSelect" id="envSelect" class="select">
 
             </select>
-            <button name="envChange" id="envChange" class="btn btn-danger " >环境流转</button>
+            <button  class="btn btn-danger " id="envChange" >环境流转</button>
+
         </span>
     </div>
     <table class="table table-border table-bordered table-bg">
@@ -104,6 +91,23 @@
     </table>
 </form>
 <br/>
+<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title">确认对话框</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<p>将发布单转换到<span id="selectEnv"></span>环境？</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="changeEnvModal">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
 {# pagination #}
 <div class="text-r">
     <ul>

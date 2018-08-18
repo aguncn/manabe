@@ -13,21 +13,19 @@ $(document).ready(function() {
             alert("系统出现问题");
         }
     });
+    {% for msg in messages %}
+        $.Huimodalalert('<span {% if msg.tags %} class="{{ msg.tags }}"{% endif %}>{{ msg.message }}</span>',3000);
+    {% endfor %}
+
+    $("#envChange").click(function(e){
+        e.preventDefault();
+        $("#selectEnv").html($("#envSelect").find("option:selected").text());
+         $("#modal-demo").modal("show");
+    });
+
+    $("#changeEnvModal").click(function(){
+         $("#envForm").submit();
+    });
 });
 
-
-    $("#envChange").confirm({
-
-        title: '确认!',
-        content: function () {
-            return "将选中的发布单切换到" + $("#envSelect").find("option:selected").text() + "环境?"
-        },
-        buttons: {
-            confirm: function () {
-                $("#envForm").submit();
-            },
-            cancel: function () {
-            },
-        }
-    });
 

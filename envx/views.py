@@ -45,11 +45,11 @@ class EnvXListView(ListView):
 def change(request):
     if request.POST:
         if request.POST.get('envSelect') is None or request.POST.get('serverSelect') is None:
-            return JsonResponse({'return': 'not choose'})
+            messages.error(request, '参数错误，请重新选择！', extra_tags='c-error')
+            return redirect('envx:list')
         else:
-            print(request.POST.get('serverSelect'), "@@@@@@@@@@@@@@")
             env_name = Env.objects.get(id=request.POST.get('envSelect')).name
             DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(deploy_progress=env_name)
-            messages.error(request, '用户或密码错误', extra_tags='bg-warning text-warning')
+            messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')
 
