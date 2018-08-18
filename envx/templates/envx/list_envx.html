@@ -47,9 +47,6 @@
             进度
         </th>
         <th>
-            操作
-        </th>
-        <th>
             用户
         </th>
         <th>
@@ -73,11 +70,6 @@
                 </td>
                 <td>
                     {{item.deploy_progress}}
-                </td>
-                <td>
-                    <a href="{% url 'deploy:edit' pk=item.id %}">
-                        编译
-                    </a>
                 </td>
                 <td>
                     {{item.create_user}}

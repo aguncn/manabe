@@ -3,6 +3,7 @@
 from django import forms
 from .models import Server
 from appinput.models import App
+from envx.models import Env
 
 
 class ServerForm(forms.ModelForm):
@@ -73,6 +74,19 @@ class ServerForm(forms.ModelForm):
             }
         ),
     )
+
+    env_name = forms.ModelChoiceField(
+        required=True,
+        queryset=Env.objects.all(),
+        label=u"所属环境",
+        widget=forms.Select(
+            attrs={
+                'style': """width:40%;""",
+                'class': 'select-box',
+            }
+        ),
+    )
+
     ip_address = forms.CharField(
         error_messages={'required': "不能为空"},
         label=u"IP",
@@ -87,5 +101,5 @@ class ServerForm(forms.ModelForm):
     class Meta:
         model = Server
         # exclude = ['app_args', 'op_user']
-        fields = ('name', 'description', 'ip_address', 'port', 'salt_name', 'app_name', 'op_user')
+        fields = ('name', 'description', 'ip_address', 'port', 'salt_name', 'app_name', 'env_name', 'op_user')
 

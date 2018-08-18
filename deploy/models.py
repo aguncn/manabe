@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from public.modules import CommonInfo
 from appinput.models import App
+from envx.models import Env
 
 
 IS_INC_TOT_CHOICES = (
@@ -29,10 +30,11 @@ class DeployPool(CommonInfo):
                                   blank=True, null=True,  verbose_name="全量或增量部署")
     deploy_type = models.CharField(max_length=255, choices=DEPLOY_TYPE_CHOICES,
                                    blank=True, null=True, verbose_name="发布程序或配置")
-    salt_module_path = models.CharField(max_length=255, verbose_name="Salt APP路径")
+    is_build = models.BooleanField(default=False, verbose_name="软件是否编译成功")
     create_user = models.ForeignKey(User,  related_name='deploy_create_user', on_delete=models.CASCADE, verbose_name="创建用户")
     nginx_url = models.URLField(default=None, blank=True, null=True, verbose_name="Tengine URL")
-    deploy_status = models.CharField(max_length=255, blank=True, null=True, verbose_name="发布单状态")
-    deploy_progress = models.CharField(max_length=32, blank=True, null=True, verbose_name="发布单进度")
+    env_name = models.ForeignKey(Env, blank=True, null=True, related_name="deploy_env_name", on_delete=models.CASCADE, verbose_name="环境")
+    deploy_status = models.CharField(max_length=255, blank=True, null=True, verbose_name="发布单状态")  # 待发布，成功，失败
+    deploy_progress = models.CharField(max_length=32, blank=True, null=True, verbose_name="发布单进度")  # 停止服务， 备份， 发布，启动，
 
 

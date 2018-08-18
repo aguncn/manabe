@@ -23,6 +23,7 @@ class AppInputCreateView(CreateView):
             name=form.cleaned_data['name'],
             description=form.cleaned_data['description'],
             jenkins_job=form.cleaned_data['jenkins_job'],
+            package_name=form.cleaned_data['package_name'],
             is_restart_status=form.cleaned_data['is_restart_status'],
             op_user=current_user_set,
         )

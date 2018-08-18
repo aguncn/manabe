@@ -1,0 +1,106 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 发布单列表 {% endblock %}
+
+{% block content %}
+<div>
+
+    <span class="select-box inline r">
+        <select name="" class="select">
+            <option value="0">全部分类</option>
+            <option value="1">分类一</option>
+            <option value="2">分类二</option>
+        </select>
+        <button name="" id="" class="btn btn-success" type="submit">过滤</button>
+        <input type="text" name="" id="" placeholder=" 名称" style="width:250px" class="input-text">
+        <button name="" id="" class="btn btn-success" type="submit">搜索</button>
+    </span>
+</div>
+<br/>
+<br/>
+
+<table class="table table-border table-bordered table-bg">
+    <thead>
+    <th>
+        发布单名称
+    </th>
+    <th>
+        所属APP
+    </th>
+    <th>
+        部署类型
+    </th>
+    <th>
+        进度
+    </th>
+    <th>
+        操作
+    </th>
+    <th>
+        用户
+    </th>
+    <th>
+        时间
+    </th>
+    </thead>
+    <tbody>
+    {% for item in object_list %}
+    <tr class="text-l">
+        <td>
+            <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
+                <a href="{% url 'deploy:detail' pk=item.id %}">
+                    {{item.name}}
+                </a>
+            </span>
+
+        </td>
+        <td>{{item.app_name}}</td>
+        <td>
+            {{item.deploy_type}}
+        </td>
+        <td>
+            {{item.deploy_progress}}
+        </td>
+        <td>
+            <a href="{% url 'deploy:deploy' app_name=item.app_name deploy_version=item.name env=item.deploy_progress%}">
+                <button id="deployBtn" class="btn btn-primary-outline radius" >
+                    部署
+                </button>
+            </a>
+        </td>
+        <td>
+            {{item.create_user}}
+        </td>
+        <td>{{item.change_date}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<br/>
+{# pagination #}
+<div class="text-r">
+    <ul>
+        {% if page_obj.has_previous %}
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">上一页</a></li>
+        {% endif %}
+        <a href="#" >
+            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        </a>
+        {% if page_obj.has_next %}
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+</script>
+
+{% endblock %}

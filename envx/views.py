@@ -48,8 +48,8 @@ def change(request):
             messages.error(request, '参数错误，请重新选择！', extra_tags='c-error')
             return redirect('envx:list')
         else:
-            env_name = Env.objects.get(id=request.POST.get('envSelect')).name
-            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(deploy_progress=env_name)
+            env_name = Env.objects.get(id=request.POST.get('envSelect'))
+            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(env_name=env_name)
             messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')
 

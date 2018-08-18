@@ -41,6 +41,16 @@ class AppForm(forms.ModelForm):
             }
         ),
     )
+    package_name = forms.CharField(
+        error_messages={'required': "不能为空"},
+        label=u"软件包名称",
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': "Package Name",
+                'class': 'input-text',
+            }
+        ),
+    )
     is_restart_status = forms.CharField(
         error_messages={'required': "不能为空"},
         required=False,
@@ -54,5 +64,5 @@ class AppForm(forms.ModelForm):
 
     class Meta:
         model = App
-        exclude = ['app_args', 'op_user']
+        exclude = ['script', 'op_user']
 

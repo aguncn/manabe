@@ -32,6 +32,15 @@
             {% endfor %}
         </div>
     </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.package_name.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.package_name }}
+            {% for error in form.package_name.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
 
     <div class="row cl">
         <label class="form-label col-xs-4 col-sm-3">{{ form.is_restart_status.label_tag }}：</label>

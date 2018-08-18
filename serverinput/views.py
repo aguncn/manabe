@@ -26,6 +26,7 @@ class ServerInputCreateView(CreateView):
             port=form.cleaned_data['port'],
             salt_name=form.cleaned_data['salt_name'],
             app_name=form.cleaned_data['app_name'],
+            env_name=form.cleaned_data['env_name'],
             op_user=current_user_set,
         )
         app.save()
