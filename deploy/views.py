@@ -28,7 +28,9 @@ class DeployCreateView(CreateView):
             description=form.cleaned_data['description'],
             app_name=form.cleaned_data['app_name'],
             branch_build=form.cleaned_data['branch_build'],
-            deploy_progress='CREATE',
+            is_inc_tot=form.cleaned_data['is_inc_tot'],
+            deploy_type=form.cleaned_data['deploy_type'],
+            deploy_status='CREATE',
             create_user=current_user_set,
         )
         deploy.save()

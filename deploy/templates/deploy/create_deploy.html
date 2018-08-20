@@ -38,10 +38,28 @@
             {% endfor %}
         </div>
     </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.is_inc_tot.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.is_inc_tot }}
+            {% for error in form.is_inc_tot.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.deploy_type.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.deploy_type }}
+            {% for error in form.deploy_type.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
 
     <div class="row cl">
         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-            <input class="btn btn-primary radius" type="submit" value="提交">
+            <input class="btn btn-primary radius" type="submit" value="新建">
         </div>
     </div>
 </form>

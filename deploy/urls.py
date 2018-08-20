@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth.decorators import login_required
 
 from .views import DeployCreateView, DeployUpdateView, DeployDetailView, DeployListView
-from .deploy_views import PublishView, DeployView, OperateView
+from .deploy_views import PublishView, DeployView, OperateView, deploy_cmd
 
 app_name = 'deploy'
 
@@ -22,6 +22,7 @@ urlpatterns += [
          name='publish'),
     path('deploy/<slug:app_name>/<slug:deploy_version>/<slug:env>/', login_required(DeployView.as_view()),
          name='deploy'),
+    path(r'deploy-cmd/', deploy_cmd, name="deploy-cmd"),
 
     path('operate/', login_required(OperateView.as_view()),
          name='operate'),

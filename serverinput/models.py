@@ -21,7 +21,7 @@ class Server(CommonInfo):
     salt_cmd = models.CharField(max_length=512, blank=True, null=True, verbose_name="执行脚本salt路径")
     history_deploy = models.CharField(max_length=512, blank=True, null=True, verbose_name="已部署版本")
     file_trans_status = models.BooleanField(default=False, verbose_name="传递发布文件是否成功")
-    deploy_status = models.CharField(max_length=128, blank=True, null=True, verbose_name="发布状态(Err,Suc)")
+    deploy_status = models.CharField(max_length=128, blank=True, null=True, verbose_name="发布状态(Err,Suc)")  # 部署各个环境的状态值
     is_rollback = models.BooleanField(default=False)
     init_param = models.CharField(max_length=256, blank=True, null=True, verbose_name=u"构建参数")
     current_status = models.CharField(max_length=256, blank=True, null=True, default=u'正常', verbose_name=u"运行状态")

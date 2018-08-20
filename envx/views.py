@@ -49,7 +49,7 @@ def change(request):
             return redirect('envx:list')
         else:
             env_name = Env.objects.get(id=request.POST.get('envSelect'))
-            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(env_name=env_name)
+            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(env_name=env_name, deploy_status='READY')
             messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')
 

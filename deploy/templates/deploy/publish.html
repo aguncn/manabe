@@ -32,7 +32,10 @@
         部署类型
     </th>
     <th>
-        进度
+        环境
+    </th>
+    <th>
+        状态
     </th>
     <th>
         操作
@@ -60,10 +63,13 @@
             {{item.deploy_type}}
         </td>
         <td>
-            {{item.deploy_progress}}
+            {{item.env_name}}
         </td>
         <td>
-            <a href="{% url 'deploy:deploy' app_name=item.app_name deploy_version=item.name env=item.deploy_progress%}">
+            {{item.deploy_status}}
+        </td>
+        <td>
+            <a href="{% url 'deploy:deploy' app_name=item.app_name deploy_version=item.name env=item.env_name%}">
                 <button id="deployBtn" class="btn btn-primary-outline radius" >
                     部署
                 </button>

@@ -6,8 +6,8 @@ from envx.models import Env
 
 
 IS_INC_TOT_CHOICES = (
-    ('TOT', r'TOT'),
-    ('INC', r'INC'),
+    ('TOT', r'全量部署'),
+    ('INC', r'增量部署'),
 )
 
 DEPLOY_TYPE_CHOICES = (
@@ -34,7 +34,6 @@ class DeployPool(CommonInfo):
     create_user = models.ForeignKey(User,  related_name='deploy_create_user', on_delete=models.CASCADE, verbose_name="创建用户")
     nginx_url = models.URLField(default=None, blank=True, null=True, verbose_name="Tengine URL")
     env_name = models.ForeignKey(Env, blank=True, null=True, related_name="deploy_env_name", on_delete=models.CASCADE, verbose_name="环境")
-    deploy_status = models.CharField(max_length=255, blank=True, null=True, verbose_name="发布单状态")  # 待发布，成功，失败
-    deploy_progress = models.CharField(max_length=32, blank=True, null=True, verbose_name="发布单进度")  # 停止服务， 备份， 发布，启动，
+    deploy_status = models.CharField(max_length=255, blank=True, null=True, verbose_name="发布单状态")  # 新建，编译，待发布，成功，失败
 
 

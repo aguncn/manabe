@@ -4,6 +4,17 @@ from django import forms
 from .models import DeployPool
 from appinput.models import App
 
+IS_INC_TOT_CHOICES = (
+    ('TOT', r'全量部署'),
+    ('INC', r'增量部署'),
+)
+
+DEPLOY_TYPE_CHOICES = (
+    ('deployall', r'发布所有'),
+    ('deploypkg', r'发布程序'),
+    ('deploycfg', r'发布配置'),
+)
+
 
 class DeployForm(forms.ModelForm):
 
@@ -53,9 +64,30 @@ class DeployForm(forms.ModelForm):
             }
         ),
     )
+    is_inc_tot = forms.CharField(
+        error_messages={'required': "不能为空"},
+        label=u"部署方式",
+        widget=forms.Select(
+            choices=IS_INC_TOT_CHOICES,
+            attrs={
+                'class': 'select-box',
+            }
+        ),
+    )
+
+    deploy_type = forms.CharField(
+        error_messages={'required': "不能为空"},
+        label=u"程序配置",
+        widget=forms.Select(
+            choices=DEPLOY_TYPE_CHOICES,
+            attrs={
+                'class': 'select-box',
+            }
+        ),
+    )
 
     class Meta:
         model = DeployPool
         # exclude = ['app_args', 'op_user']
-        fields = ('name', 'description', 'app_name', 'branch_build')
+        fields = ('name', 'description', 'app_name', 'branch_build', 'is_inc_tot', 'deploy_type')
 
