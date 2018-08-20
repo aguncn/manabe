@@ -19,13 +19,11 @@ class PublishView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return DeployPool.objects.filter(Q(name__icontains=search_pk)|
-                                      Q(script_template__icontains=search_pk)|
-                                      Q(allow_user__username__icontains=search_pk))
-        if self.request.GET.get('app_name') :
-            app_name = self.kwargs['app_name']
-            return DeployPool.objects.filter(id=app_name)
-        return DeployPool.objects.all()
+            return DeployPool.objects.filter(Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(deploy_status__in=["CREATE", "BUILD"])
+        if self.request.GET.get('app_name'):
+            app_name = self.request.GET.get('app_name')
+            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__in=["CREATE", "BUILD"])
+        return DeployPool.objects.exclude(deploy_status__in=["CREATE", "BUILD"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

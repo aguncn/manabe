@@ -9,14 +9,9 @@
 
     </span>
     <span class="select-box inline r">
-        <select name="" class="select">
-            <option value="0">全部分类</option>
-            <option value="1">分类一</option>
-            <option value="2">分类二</option>
-        </select>
-        <button name="" id="" class="btn btn-success" type="submit">过滤</button>
-        <input type="text" name="" id="" placeholder=" 名称" style="width:250px" class="input-text">
-        <button name="" id="" class="btn btn-success" type="submit">搜索</button>
+        {% include "manabe/filter.html" %}
+        <button class="btn btn-success filter_btn" type="submit">过滤</button>
+        {% include "manabe/search.html" %}
     </span>
 </div>
 <br/>
@@ -122,6 +117,30 @@
 
 {% block script %}
 <script>
-    {% include "envx/envx.js" %}
+$(".search_btn").click(function(){
+    var search_pk = $("input[name='search_pk']").val() || "demo";
+    if (search_pk == "demo") {
+        $.Huimodalalert('<span class="c-error">亲，请输入关键字再进行搜索！</span>',3000);
+        return false;
+    }
+    search_pk = search_pk.replace(/(^\s*)|(\s*$)/g, "");
+    var url = "{% url 'envx:list' %}?search_pk=" + search_pk
+    console.log(url)
+    location.href = url
+});
+
+$(".filter_btn").click(function(){
+    var filter_app_name = $("select[name='App_name']").val();
+    console.log(filter_app_name);
+    if (filter_app_name.length == 0) {
+        $.Huimodalalert('<span class="c-error">亲，请选择组件再过滤！</span>',3000);
+        return false;
+    } else {
+        var url = "{% url 'envx:list' %}?app_name="+ filter_app_name;
+    }
+    console.log(url)
+    location.href = url
+});
+{% include "envx/envx.js" %}
 </script>
 {% endblock %}

@@ -18,13 +18,11 @@ class EnvXListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return DeployPool.objects.filter(Q(name__icontains=search_pk)|
-                                      Q(script_template__icontains=search_pk)|
-                                      Q(allow_user__username__icontains=search_pk))
-        if self.request.GET.get('app_name') :
-            app_name = self.kwargs['app_name']
-            return DeployPool.objects.filter(id=app_name)
-        return DeployPool.objects.all()
+            return DeployPool.objects.filter(Q(name__icontains=search_pk)| Q(description__icontains=search_pk)).exclude(deploy_status__in=["CREATE"])
+        if self.request.GET.get('app_name'):
+            app_name = self.request.GET.get('app_name')
+            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__in=["CREATE"])
+        return DeployPool.objects.exclude(deploy_status__in=["CREATE"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -49,7 +47,7 @@ def change(request):
             return redirect('envx:list')
         else:
             env_name = Env.objects.get(id=request.POST.get('envSelect'))
-            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(env_name=env_name, deploy_status='READY')
+            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(env_name=env_name, deploy_status='Ready')
             messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')
 
