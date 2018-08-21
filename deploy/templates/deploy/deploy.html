@@ -24,6 +24,17 @@
             增量部署
             {% endifequal %}
         </span>
+        <span class="label label-primary radius">
+            {% ifequal deploy_type  "deployall" %}
+            程序及配置
+            {% endifequal %}
+            {% ifequal deploy_type  "deploypkg" %}
+            程序
+            {% endifequal %}
+            {% ifequal deploy_type  "deploycfg" %}
+            配置
+            {% endifequal %}
+        </span>
 
 
 

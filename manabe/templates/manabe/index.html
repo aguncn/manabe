@@ -3,5 +3,84 @@
 {% block title %} index {% endblock %}
 
 {% block content %}
+<table class="table table-border table-bordered table-bg">
+    <thead>
+        <tr>
+            <th scope="col" colspan="7">发布图表</th>
+        </tr>
+    <tbody>
+        <tr class="text-c">
+            <td><img src="{% static 'img/hcharts_demo.png' %}" height="200" width="100%"></td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+
+<table class="table table-border table-bordered table-bg">
+    <thead>
+        <tr>
+            <th scope="col" colspan="7">系统信息</th>
+        </tr>
+        <tr class="text-c">
+            <th width="200">应用</th>
+            <th width="200">服务器</th>
+            <th width="200">发布单</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="text-c">
+            <td>{{app_count}}</td>
+            <td>{{server_count}}</td>
+            <td>{{deploy_count}}</td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+<table class="table table-border table-bordered table-bg">
+    <thead>
+        <tr>
+            <th scope="col" colspan="7">服务器信息</th>
+        </tr>
+        <tr class="text-c">
+            <th width="200">系统</th>
+            <th width="200">python</th>
+            <th width="200">django</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="text-c">
+            <td>{{platform}}</td>
+            <td>{{python_version}}</td>
+            <td>{{django_version}}</td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+<table class="table table-border table-bordered table-bg">
+    <thead>
+        <tr>
+            <th scope="col" colspan="7">浏览器信息</th>
+        </tr>
+        <tr class="text-c">
+            <th width="200">IP</th>
+            <th width="200">语言</th>
+            <th width="200">版本</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="text-c">
+            <td>{{REMOTE_ADDR}}</td>
+            <td>{{HTTP_ACCEPT_LANGUAGE}}</td>
+            <td>
+                {%if HTTP_USER_AGENT|length >= 20 %}
+                    {{HTTP_USER_AGENT|slice:"20"}}...
+                {%else%} {{HTTP_USER_AGENT}}
+                {%endif%}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+
 {% endblock %}
 

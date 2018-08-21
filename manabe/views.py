@@ -1,11 +1,16 @@
 # coding:utf8
 # 首先导入系统库，再导入框架库，最后导入用户库
+import platform
+import django
 from django.views.generic.base import TemplateView
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.contrib.auth.models import User
+from appinput.models import App
+from serverinput.models import Server
+from deploy.models import DeployPool
 
 from .forms import LoginForm, RegisterForm, ChangepwdForm
 
@@ -16,6 +21,16 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['current_page'] = "index"
+        context['app_count'] = App.objects.count()
+        context['server_count'] = Server.objects.count()
+        context['deploy_count'] = DeployPool.objects.count()
+        context['REMOTE_ADDR'] = self.request.META.get("REMOTE_ADDR")
+        context['HTTP_USER_AGENT'] = self.request.META.get("HTTP_USER_AGENT")
+        context['HTTP_ACCEPT_LANGUAGE'] = self.request.META.get("HTTP_ACCEPT_LANGUAGE")
+        context['platform'] = platform.platform()
+        context['python_version'] = platform.python_version()
+        context['django_version'] = django.get_version()
+
         return context
 
 

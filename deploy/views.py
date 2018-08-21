@@ -53,7 +53,7 @@ class DeployCreateView(CreateView):
 
 class DeployListView(ListView):
     template_name = 'deploy/list_deploy.html'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
