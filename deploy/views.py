@@ -2,13 +2,17 @@
 import random
 import time
 import string
+import json
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.utils import timezone
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from .forms import DeployForm
 from .models import DeployPool
+from django.conf import settings
+import requests
 
 
 class DeployCreateView(CreateView):
@@ -65,6 +69,8 @@ class DeployListView(ListView):
         context['now'] = timezone.now()
         context['current_page'] = "deploy-list"
         context['current_page_name'] = "发布单列表"
+        context['jenkins_url'] = settings.JENKINS_URL
+
         query_string = self.request.META.get('QUERY_STRING')
         if 'page' in query_string:
             query_list = query_string.split('&')
@@ -101,3 +107,22 @@ class DeployUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("deploy:list")
+
+
+@csrf_exempt
+def jenkins_build(request):
+    pass
+
+
+def all_is_not_null(*args):
+    for value in args:
+        # print value
+        if value == 'None' or len(value) == 0:
+            return False
+    return True
+
+
+@csrf_exempt
+def jenkins_status(request):
+    pass
+

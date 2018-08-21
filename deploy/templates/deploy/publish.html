@@ -81,8 +81,6 @@
                 发布异常
                 </span>
             {% endifequal %}
-
-
         </td>
         <td>
             <a href="{% url 'deploy:deploy' app_name=item.app_name deploy_version=item.name env=item.env_name%}">

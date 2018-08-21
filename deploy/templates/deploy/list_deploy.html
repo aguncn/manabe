@@ -31,7 +31,7 @@
         Git Branch
     </th>
     <th>
-        Jenkins No.
+        增量全量
     </th>
     <th>
         部署类型
@@ -64,17 +64,46 @@
         <td>
             {{item.branch_build}}
         </td>
-        <td>{{item.jenkins_number}}</td>
         <td>
-            {{item.deploy_type}}
+            {% ifequal item.is_inc_tot "TOT" %}
+                <span class="label label-secondary radius">
+                全量
+                </span>
+            {% endifequal %}
+            {% ifequal item.is_inc_tot "INC" %}
+                <span class="label label-secondary radius">
+                增量
+                </span>
+            {% endifequal %}
+        </td>
+        <td>
+            {% ifequal item.deploy_type "deployall" %}
+                <span class="label label-primary radius">
+                程序及配置
+                </span>
+            {% endifequal %}
+            {% ifequal item.deploy_type "deploypkg" %}
+                <span class="label label-primary radius">
+                程序
+                </span>
+            {% endifequal %}
+            {% ifequal item.deploy_type "deploycfg" %}
+                <span class="label label-primary radius">
+                配置
+                </span>
+            {% endifequal %}
+
         </td>
         <td>
             {{item.deploy_status}}
         </td>
         <td>
-            <a href="{% url 'deploy:edit' pk=item.id %}">
+            <button  class="btn btn-primary-outline radius buildBtn"
+                     app_name="{{item.app_name}}"
+                     deploy_version="{{item.name}}"
+                     jenkins_job="{{item.app_name.jenkins_job}}">
                 编译
-            </a>
+            </button>
         </td>
         <td>
             {{item.create_user}}
@@ -85,6 +114,34 @@
     </tbody>
 </table>
 <br/>
+<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title">构建程序发布包</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<p>
+                    APP名称：<span id="modal_app_name" ></span><br/>
+                    发布单：<span id="modal_deploy_version" class="label label-primary radius"></span><br/>
+                    Jenkins Job:<span id="modal_jenkins_job" ></span><br/><br/>
+                    <button class="btn_gen_pkg btn btn-danger">
+                        开始构建
+                    </button>
+
+
+                    <div id="gen_pkg_progress{{ forloop.counter }}" ></div>
+
+                </p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="changeEnvModal">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
 {# pagination #}
 <div class="text-r">
     <ul>
@@ -131,6 +188,8 @@ $(".filter_btn").click(function(){
     console.log(url)
     location.href = url
 });
+
+{% include "deploy/build.js" %}
 
 </script>
 
