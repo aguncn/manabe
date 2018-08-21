@@ -102,3 +102,4 @@ def user_register(request):
     else:
         form = RegisterForm()
         return render(request, 'manabe/register.html', locals())
+

@@ -3,7 +3,7 @@
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
 		<div class="container-fluid cl">
-		<a class="logo navbar-logo f-l mr-10 hidden-xs" href="/aboutHui.shtml">Manabe</a>
+		<a class="logo navbar-logo f-l mr-10 hidden-xs" href="{% url 'donation' %}">Manabe</a>
 
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs"><img src="{% static 'favicon.ico' %}" height="20" width="20" /> </span>
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
@@ -11,10 +11,9 @@
 				<ul class="cl">
 					<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 快捷操作 <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onclick="article_add('添加资讯','article-add.html')"><i class="Hui-iconfont">&#xe616;</i> 新增发布单</a></li>
-							<li><a href="javascript:;" onclick="picture_add('添加资讯','picture-add.html')"><i class="Hui-iconfont">&#xe613;</i> 部署应用</a></li>
-							<li><a href="javascript:;" onclick="product_add('添加资讯','product-add.html')"><i class="Hui-iconfont">&#xe620;</i> 服务器启停</a></li>
-							<li><a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')"><i class="Hui-iconfont">&#xe60d;</i> 用户</a></li>
+							<li><a href="{% url 'deploy:create' %}">新增发布单</a></li>
+							<li><a href="{% url 'envx:list' %}"> 环境流转</a></li>
+							<li><a href="{% url 'deploy:publish' %}"> 部署软件</a></li>
 				</ul>
 			</li>
 		</ul>

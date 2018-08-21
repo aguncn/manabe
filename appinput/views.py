@@ -25,6 +25,7 @@ class AppInputCreateView(CreateView):
             jenkins_job=form.cleaned_data['jenkins_job'],
             package_name=form.cleaned_data['package_name'],
             is_restart_status=form.cleaned_data['is_restart_status'],
+            script=form.cleaned_data['script'],
             op_user=current_user_set,
         )
         app.save()
@@ -48,12 +49,7 @@ class AppInputListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return App.objects.filter(Q(name__icontains=search_pk)|
-                                      Q(script_template__icontains=search_pk)|
-                                      Q(allow_user__username__icontains=search_pk))
-        if self.request.GET.get('app_name') :
-            app_name = self.kwargs['app_name']
-            return App.objects.filter(id=app_name)
+            return App.objects.filter(Q(name__icontains=search_pk) | Q(package_name__icontains=search_pk))
         return App.objects.all()
 
     def get_context_data(self, **kwargs):

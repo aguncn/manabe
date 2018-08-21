@@ -95,15 +95,29 @@
 
         </td>
         <td>
-            {{item.deploy_status}}
+            {% ifequal item.deploy_status "CREATE" %}
+                新建
+            {% endifequal %}
+            {% ifequal item.deploy_status "BUILD" %}
+                编译完成
+            {% endifequal %}
         </td>
         <td>
-            <button  class="btn btn-primary-outline radius buildBtn"
-                     app_name="{{item.app_name}}"
-                     deploy_version="{{item.name}}"
-                     jenkins_job="{{item.app_name.jenkins_job}}">
-                编译
-            </button>
+            {% ifequal item.deploy_status "CREATE" %}
+                <button  class="btn btn-primary-outline radius buildBtn"
+                         app_name="{{item.app_name}}"
+                         deploy_version="{{item.name}}"
+                         jenkins_job="{{item.app_name.jenkins_job}}">
+                    编译
+                </button>
+            {% endifequal %}
+            {% ifequal item.deploy_status "BUILD" %}
+                <button  class="btn btn-success-outline radius checkBtn"
+                         app_name="{{item.app_name}}"
+                         deploy_version="{{item.name}}">
+                    检测
+                </button>
+            {% endifequal %}
         </td>
         <td>
             {{item.create_user}}

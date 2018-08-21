@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from .views import IndexView, user_login, user_register, change_password
 from django.contrib.auth.views import logout_then_login
@@ -25,6 +26,7 @@ urlpatterns = [
     path('accounts/register/', user_register, name='register'),
     path('accounts/login/', user_login, name='login'),
     path('logout/', logout_then_login, name='logout'),
+    path('donation/', TemplateView.as_view(template_name="manabe/donation.html"), name="donation"),
     path('accounts/change-password/', login_required(change_password), name="change-password"),
 ]
 

@@ -61,8 +61,8 @@ class DeployListView(ListView):
             return DeployPool.objects.filter(Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).filter(deploy_status__in=["CREATE"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return DeployPool.objects.filter(app_name=app_name).filter(deploy_status__in=["CREATE"])
-        return DeployPool.objects.filter(deploy_status__in=["CREATE"])
+            return DeployPool.objects.filter(app_name=app_name).filter(deploy_status__in=["CREATE", "BUILD"])
+        return DeployPool.objects.filter(deploy_status__in=["CREATE", "BUILD"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,6 +70,7 @@ class DeployListView(ListView):
         context['current_page'] = "deploy-list"
         context['current_page_name'] = "发布单列表"
         context['jenkins_url'] = settings.JENKINS_URL
+        context['nginx_url'] = settings.NGINX_URL
 
         query_string = self.request.META.get('QUERY_STRING')
         if 'page' in query_string:

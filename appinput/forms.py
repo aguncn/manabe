@@ -62,7 +62,19 @@ class AppForm(forms.ModelForm):
         ),
     )
 
+    script = forms.CharField(
+        required=True,
+        label=u"APP脚本",
+        widget=forms.Textarea(
+            attrs={
+                'rows': 15,
+                'style': """width:75%;""",
+                'class': 'textarea',
+            }
+        ),
+    )
+
     class Meta:
         model = App
-        exclude = ['script', 'op_user']
+        exclude = ['op_user']
 

@@ -52,9 +52,9 @@ class ServerInputListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return Server.objects.filter(Q(name__icontains=search_pk)|
-                                      Q(script_template__icontains=search_pk)|
-                                      Q(allow_user__username__icontains=search_pk))
+            return Server.objects.filter(Q(name__icontains=search_pk) |
+                                         Q(ip_address__icontains=search_pk) |
+                                         Q(port__icontains=search_pk))
         if self.request.GET.get('app_name') :
             app_name = self.kwargs['app_name']
             return Server.objects.filter(id=app_name)

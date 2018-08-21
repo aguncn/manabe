@@ -11,14 +11,7 @@
     </a>
     </span>
     <span class="select-box inline r">
-        <select name="" class="select">
-            <option value="0">全部分类</option>
-            <option value="1">分类一</option>
-            <option value="2">分类二</option>
-        </select>
-        <button name="" id="" class="btn btn-success" type="submit">过滤</button>
-        <input type="text" name="" id="" placeholder=" 名称" style="width:250px" class="input-text">
-        <button name="" id="" class="btn btn-success" type="submit">搜索</button>
+        {% include "manabe/search.html" %}
     </span>
 </div>
 <br/>
@@ -34,6 +27,9 @@
     </th>
     <th>
         是否重启
+    </th>
+    <th>
+        软件包名
     </th>
     <th>
         用户
@@ -60,10 +56,17 @@
         <td>
             {{item.is_restart_status}}
         </td>
+        <td>
+            <span class="label label-primary radius">
+                {{item.package_name }}
+            </span>
+        </td>
         <td>{{item.op_user}}</td>
         <td>
             <a href="{% url 'appinput:edit' pk=item.id %}">
-                编辑
+                <button class="	btn btn-warning-outline radius" >
+                    编辑
+                </button>
             </a>
         </td>
         <td>{{item.change_date}}</td>
@@ -94,7 +97,17 @@
 
 {% block script %}
 <script>
-
+$(".search_btn").click(function(){
+    var search_pk = $("input[name='search_pk']").val() || "demo";
+    if (search_pk == "demo") {
+        $.Huimodalalert('<span class="c-error">亲，请输入关键字再进行搜索！</span>',3000);
+        return false;
+    }
+    search_pk = search_pk.replace(/(^\s*)|(\s*$)/g, "");
+    var url = "{% url 'appinput:list' %}?search_pk=" + search_pk
+    console.log(url)
+    location.href = url
+});
 </script>
 
 {% endblock %}
