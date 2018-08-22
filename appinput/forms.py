@@ -1,5 +1,6 @@
 # coding:utf-8
 
+from django.contrib.auth.models import User
 from django import forms
 from .models import App
 
@@ -61,6 +62,16 @@ class AppForm(forms.ModelForm):
             }
         ),
     )
+    manage_user = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label=u"管理员",
+        widget=forms.Select(
+            attrs={
+                'style': """width:40%;""",
+                'class': 'select-box',
+            }
+        ),
+    )
 
     script = forms.CharField(
         required=True,
@@ -74,7 +85,8 @@ class AppForm(forms.ModelForm):
         ),
     )
 
+
     class Meta:
         model = App
-        exclude = ['op_user']
+        exclude = ['op_log_no']
 

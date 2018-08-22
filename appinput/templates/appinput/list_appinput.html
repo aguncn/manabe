@@ -6,9 +6,11 @@
 {% block content %}
 <div>
     <span class="l">
-    <a class="btn btn-primary radius"  href="{% url 'appinput:create' %}">
-        新建App应用
-    </a>
+        {% if is_admin_group %}
+            <a class="btn btn-primary radius"  href="{% url 'appinput:create' %}">
+                新建App应用
+            </a>
+        {% endif %}
     </span>
     <span class="select-box inline r">
         {% include "manabe/search.html" %}
@@ -32,10 +34,13 @@
         软件包名
     </th>
     <th>
-        用户
+        管理员
     </th>
     <th>
-        操作
+        编辑
+    </th>
+    <th>
+        授权
     </th>
     <th>
         时间
@@ -61,13 +66,48 @@
                 {{item.package_name }}
             </span>
         </td>
-        <td>{{item.op_user}}</td>
+        <td>{{item.manage_user}}</td>
         <td>
+            {% if is_admin_group %}
             <a href="{% url 'appinput:edit' pk=item.id %}">
                 <button class="	btn btn-warning-outline radius" >
                     编辑
                 </button>
             </a>
+            {% else %}
+                {% ifequal  request.user item.manage_user %}
+                <a href="{% url 'appinput:edit' pk=item.id %}">
+                    <button class="	btn btn-warning-outline radius" >
+                        编辑
+                    </button>
+                </a>
+                {% else %}
+                <button class="btn disabled radius" >
+                        编辑
+                </button>
+                {% endifequal %}
+            {% endif %}
+        </td>
+        <td>
+            {% if is_admin_group %}
+            <a href="{% url 'appinput:edit' pk=item.id %}">
+                <button class="	btn btn-warning-outline radius" >
+                    授权
+                </button>
+            </a>
+            {% else %}
+                {% ifequal  request.user item.manage_user %}
+                <a href="{% url 'appinput:edit' pk=item.id %}">
+                    <button class="	btn btn-warning-outline radius" >
+                        授权
+                    </button>
+                </a>
+                {% else %}
+                <button class="btn disabled radius" >
+                        授权
+                </button>
+                {% endifequal %}
+            {% endif %}
         </td>
         <td>{{item.change_date}}</td>
     </tr>

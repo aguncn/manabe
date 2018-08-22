@@ -4,15 +4,24 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.utils import timezone
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .forms import ServerForm
 from .models import Server
+from public.user_group import is_admin_group
 
 
 class ServerInputCreateView(CreateView):
     template_name = 'serverinput/create_serverinput.html'
     model = Server
     form_class = ServerForm
+
+    def get(self, request, *args, **kwargs):
+        # 定义用户权限
+        if is_admin_group(self.request.user):
+            return super().get(request, *args, **kwargs)
+        else:
+            result = "亲，没有权限，只有管理员才可进入！"
+            return HttpResponse(result)
 
     def form_invalid(self, form):
         return self.render_to_response({'form': form})
@@ -63,6 +72,7 @@ class ServerInputListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
+        context['is_admin_group'] = is_admin_group(self.request.user)
         context['current_page'] = "serverinput-list"
         context['current_page_name'] = "服务器列表"
         query_string = self.request.META.get('QUERY_STRING')
@@ -91,6 +101,14 @@ class ServerInputUpdateView(UpdateView):
     template_name = 'serverinput/edit_serverinput.html'
     model = Server
     form_class = ServerForm
+
+    def get(self, request, *args, **kwargs):
+        # 定义用户权限
+        if is_admin_group(self.request.user):
+            return super().get(request, *args, **kwargs)
+        else:
+            result = "亲，没有权限，只有管理员才可进入！"
+            return HttpResponse(result)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

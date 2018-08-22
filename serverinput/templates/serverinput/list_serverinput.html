@@ -6,9 +6,11 @@
 {% block content %}
 <div>
     <span class="l">
-    <a class="btn btn-primary radius"  href="{% url 'serverinput:create' %}">
-        新建服务器
-    </a>
+        {% if is_admin_group %}
+            <a class="btn btn-primary radius"  href="{% url 'serverinput:create' %}">
+                新建服务器
+            </a>
+        {% endif %}
     </span>
     <span class="select-box inline r">
         {% include "manabe/search.html" %}
@@ -55,11 +57,18 @@
         </td>
         <td>{{item.app_name}}</td>
         <td>
+
+            {% if is_admin_group %}
             <a href="{% url 'serverinput:edit' pk=item.id %}">
                 <button class="	btn btn-warning-outline radius" >
                     编辑
                 </button>
             </a>
+            {% else %}
+                <button class="btn disabled radius" >
+                    编辑
+                </button>
+            {% endif %}
         </td>
         <td>{{item.change_date}}</td>
     </tr>
