@@ -8,7 +8,7 @@ app_name = 'envx'
 urlpatterns = [
     path('change/', login_required(change),
          name='change'),
-    path(r'list/', login_required(EnvXListView.as_view()),
+    path('list/', login_required(EnvXListView.as_view()),
          name='list'),
 
 ]

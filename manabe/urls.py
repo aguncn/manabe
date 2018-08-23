@@ -49,10 +49,7 @@ urlpatterns += [
 urlpatterns += [
     path('envx/', include('envx.urls')),
 ]
-'''
+
 urlpatterns += [
-    path('right/', include('rightadmin.urls')),
+    path('rightadmin/', include('rightadmin.urls')),
 ]
-
-
-'''

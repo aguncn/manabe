@@ -90,14 +90,14 @@
         </td>
         <td>
             {% if is_admin_group %}
-            <a href="{% url 'appinput:edit' pk=item.id %}">
+            <a href="{% url 'rightadmin:list' pk=item.id %}">
                 <button class="	btn btn-warning-outline radius" >
                     授权
                 </button>
             </a>
             {% else %}
                 {% ifequal  request.user item.manage_user %}
-                <a href="{% url 'appinput:edit' pk=item.id %}">
+                <a href="{% url 'rightadmin:list' pk=item.id %}">
                     <button class="	btn btn-warning-outline radius" >
                         授权
                     </button>
