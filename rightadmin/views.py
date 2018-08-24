@@ -1,7 +1,8 @@
 from django.views.generic import TemplateView
-from django.http import HttpResponse
+from django.shortcuts import render
+from django.contrib.auth.models import User
 from appinput.models import App
-from rightadmin.models import Action
+from .models import Action, Permission
 from envx.models import Env
 
 
@@ -20,5 +21,32 @@ class RightAdminView(TemplateView):
 
 
 def admin_user(request, app_id, action_id, env_id):
-    print(app_id, action_id, env_id, "@@@@@@@@@@@@@@@@")
-    return HttpResponse("hello")
+    # 将所有用户区别为已有权限和没有权限(users, guests)，返回给前端页面作选择。
+    all_user_set = User.objects.all().order_by("username")
+    guests = []
+    users = []
+    filter_dict = dict()
+    filter_dict['app_name__id'] = app_id
+    filter_dict['action_name__id'] = action_id
+    if env_id != '0':
+        filter_dict['env_name__id'] = env_id
+    try:
+        permission_set = Permission.objects.get(**filter_dict)
+        user_set = permission_set.main_user.all()
+        for user in all_user_set:
+            if user in user_set:
+                users.append(user)
+            else:
+                guests.append(user)
+    except Permission.DoesNotExist:
+        guests = all_user_set
+    return render(request, 'rightadmin/edit_user.html',
+                  {'users': users,
+                   'app_id': app_id,
+                   'action_id': action_id,
+                   'env_id': env_id,
+                   'guests': guests})
+
+
+def update_permission(request):
+    pass

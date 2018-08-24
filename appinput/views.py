@@ -54,7 +54,7 @@ class AppInputCreateView(CreateView):
 
 class AppInputListView(ListView):
     template_name = 'appinput/list_appinput.html'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
