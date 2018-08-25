@@ -4,15 +4,17 @@ import time
 import string
 import json
 from django.urls import reverse, reverse_lazy
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.utils import timezone
 from django.db.models import Q
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from .forms import DeployForm
 from .models import DeployPool
+from rightadmin.models import Action
 from django.conf import settings
-import requests
+from public.user_group import is_right
 
 
 class DeployCreateView(CreateView):
@@ -24,18 +26,23 @@ class DeployCreateView(CreateView):
         return self.render_to_response({'form': form})
 
     def form_valid(self, form):
-        current_user_set = self.request.user
+        user = self.request.user
+        app = form.cleaned_data['app_name']
+        action = Action.objects.get(name="CREATE")
+        if not is_right(app.id, action.id, 0, user):
+            messages.error(self.request, '没有权限，请联系此应用管理员:' + str(app.manage_user), extra_tags='c-error')
+            return self.render_to_response({'form': form})
         random_letter = ''.join(random.sample(string.ascii_letters, 2))
         deploy_version = time.strftime("%Y-%m%d-%H%M%S", time.localtime()) + random_letter.upper()
         deploy = DeployPool.objects.create(
             name=deploy_version,
             description=form.cleaned_data['description'],
-            app_name=form.cleaned_data['app_name'],
+            app_name=app,
             branch_build=form.cleaned_data['branch_build'],
             is_inc_tot=form.cleaned_data['is_inc_tot'],
             deploy_type=form.cleaned_data['deploy_type'],
             deploy_status='CREATE',
-            create_user=current_user_set,
+            create_user=user,
         )
         deploy.save()
         return HttpResponseRedirect(reverse("deploy:list"))

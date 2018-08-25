@@ -50,23 +50,24 @@ $(document).ready(function() {
         console.log(group_data);
         $.ajax({
             type: "POST",
+            data:{
+                group_data: group_data,
+            },
             url: "{% url 'rightadmin:update_permission' %}",
             dataType : "json",
             success: function(data) {
                 console.log(data);
-                $.each(data, function(index,value){
-                    $('#envSelect').append('<option value="' + index + '">' + value + '</option>');
-                });
+                if (data['return'] == 'error') {
+                    $.Huimodalalert("<span class='c-danger'>亲，没有权限更新哟~</span>",3000);
+                }
+                if (data['return'] == 'success') {
+                    $.Huimodalalert("<span class='c-success'>权限更改成功！</span>",3000);
+                }
             },
             error : function(){
-                alert("系统出现问题");
+                $.Huimodalalert("<span class='c-danger'>系统出现问题</span>",3000);
             }
         });
-        {% for msg in messages %}
-            $.Huimodalalert('<span {% if msg.tags %} class="{{ msg.tags }}"{% endif %}>{{ msg.message }}</span>',3000);
-        {% endfor %}
-        $.Huimodalalert('dfssssssssss',3000);
-
     });
 });
 </script>

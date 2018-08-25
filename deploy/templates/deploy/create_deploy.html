@@ -3,6 +3,11 @@
 {% block title %} 新建发布单 {% endblock %}
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="Huialert Huialert-error"><i class="Hui-iconfont">&#xe6a6;</i>{{ message }}</div>
+    {% endfor %}
+{% endif %}
 <form action="" method="post" class="form form-horizontal" id="demoform-1">
     {% csrf_token %}
     <div class="row cl">

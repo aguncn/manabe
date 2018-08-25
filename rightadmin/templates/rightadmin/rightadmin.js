@@ -4,7 +4,7 @@
    };
    // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
    var zNodes = [
-        {name: "{{ app.name }}", open:true, children: [
+        {name: "应用名称：{{ app.name }}", open:true, children: [
             {%for single_action in action %}
                 {% ifnotequal single_action.name 'DEPLOY'%}
                     {name: "{{single_action.description}}", url:"{% url 'rightadmin:admin_user' app_id=app.id action_id=single_action.id env_id=0 %}", target:"myFrame"},

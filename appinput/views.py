@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from .forms import AppForm
 from .models import App
-from public.user_group import is_admin_group
+from public.user_group import is_admin_group, is_right
 
 
 class AppInputCreateView(CreateView):
@@ -28,7 +28,7 @@ class AppInputCreateView(CreateView):
         return self.render_to_response({'form': form})
 
     def form_valid(self, form):
-        current_user_set = self.request.user
+        user = self.request.user
         app = App.objects.create(
             name=form.cleaned_data['name'],
             description=form.cleaned_data['description'],
@@ -36,7 +36,7 @@ class AppInputCreateView(CreateView):
             package_name=form.cleaned_data['package_name'],
             is_restart_status=form.cleaned_data['is_restart_status'],
             script=form.cleaned_data['script'],
-            manage_user=current_user_set,
+            manage_user=user,
         )
         app.save()
         return HttpResponseRedirect(reverse("appinput:list"))
