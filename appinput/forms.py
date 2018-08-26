@@ -85,8 +85,6 @@ class AppForm(forms.ModelForm):
         ),
     )
 
-
     class Meta:
         model = App
         exclude = ['op_log_no']
-

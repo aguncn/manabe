@@ -65,7 +65,8 @@ class DeployListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return DeployPool.objects.filter(Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).filter(deploy_status__in=["CREATE"])
+            return DeployPool.objects.filter(Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).filter(
+                deploy_status__in=["CREATE"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
             return DeployPool.objects.filter(app_name=app_name).filter(deploy_status__in=["CREATE", "BUILD"])
@@ -133,4 +134,3 @@ def all_is_not_null(*args):
 @csrf_exempt
 def jenkins_status(request):
     pass
-

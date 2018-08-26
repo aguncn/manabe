@@ -21,7 +21,9 @@ class PublishView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return DeployPool.objects.filter(Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(deploy_status__in=["CREATE", "BUILD"])
+            return DeployPool.objects.filter(
+                Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(
+                deploy_status__in=["CREATE", "BUILD"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
             return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__in=["CREATE", "BUILD"])
@@ -49,7 +51,7 @@ class DeployView(ListView):
 
     def get_queryset(self, **kwargs):
         return Server.objects.filter(env_name__name=self.kwargs['env']).filter(
-                app_name__name=self.kwargs['app_name'])
+            app_name__name=self.kwargs['app_name'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -94,10 +96,10 @@ class OperateView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return DeployPool.objects.filter(Q(name__icontains=search_pk)|
-                                      Q(script_template__icontains=search_pk)|
-                                      Q(allow_user__username__icontains=search_pk))
-        if self.request.GET.get('app_name') :
+            return DeployPool.objects.filter(Q(name__icontains=search_pk) |
+                                             Q(script_template__icontains=search_pk) |
+                                             Q(allow_user__username__icontains=search_pk))
+        if self.request.GET.get('app_name'):
             app_name = self.kwargs['app_name']
             return DeployPool.objects.filter(id=app_name)
         return DeployPool.objects.all()
@@ -152,7 +154,8 @@ def deploy_cmd(request):
         if cmd_data.startswith('p_value'):
             p_value = int(cmd_data.split('=')[1])
 
-    print(app_name, deploy_version, env, subserver_list, deploy_type, is_restart_server, operation_type, sp_type, p_value)
+    print(app_name, deploy_version, env, subserver_list, deploy_type, is_restart_server, operation_type, sp_type,
+          p_value)
 
     # 串行等同于批次多于子服务器数量的并行，在列表分组时，使用了函数表达式
     if sp_type == "serial_deploy" or p_value > len(subserver_list):
@@ -162,10 +165,10 @@ def deploy_cmd(request):
     deploy_version = deploy_version if deploy_version != '' else 'DEMO_VER'
 
     if deploy_version == "DEMO_VER":
-        App.objects.filter(name=app_name).update(op_log_no=F('op_log_no')+1)
+        App.objects.filter(name=app_name).update(op_log_no=F('op_log_no') + 1)
         deploy_no = App.objects.get(name=app_name).op_log_no
     else:
-        DeployPool.objects.filter(name=deploy_version).update(deploy_no=F('deploy_no')+1)
+        DeployPool.objects.filter(name=deploy_version).update(deploy_no=F('deploy_no') + 1)
         deploy_no = DeployPool.objects.get(name=deploy_version).deploy_no
     deploy(deploy_subserver_list, deploy_type, is_restart_server, str(user_name), app_name,
            deploy_version, deploy_no, operation_type, env)

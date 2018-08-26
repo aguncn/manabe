@@ -1,6 +1,5 @@
 # coding=utf8
 
-from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.utils import timezone
@@ -20,7 +19,9 @@ class EnvXListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return DeployPool.objects.filter(Q(name__icontains=search_pk)| Q(description__icontains=search_pk)).exclude(deploy_status__in=["CREATE"])
+            return DeployPool.objects.filter(
+                Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(
+                deploy_status__in=["CREATE"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
             return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__in=["CREATE"])
@@ -62,4 +63,3 @@ def change(request):
             DeployPool.objects.filter(id=deploy_id).update(env_name=env_name, deploy_status='Ready')
             messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')
-
