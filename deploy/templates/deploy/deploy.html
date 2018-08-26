@@ -35,9 +35,6 @@
             配置
             {% endifequal %}
         </span>
-
-
-
     </span>
 
 </div>
@@ -108,6 +105,7 @@
     </table>
 
     <br/>
+    {% if is_right %}
     <div class="text-l">
         <input type="text" name="operation_type"  value="deploy" hidden/>
         <input type="text" name="deploy_version"  value="{{ deploy_version }}" hidden/>
@@ -151,6 +149,11 @@
             <button class="btn btn-danger radius" id="btn-deploy">立即部署</button>
         </span>
     </div>
+    {% else %}
+    <div class="Huialert Huialert-error"><i class="Hui-iconfont">&#xe6a6;</i>
+        你没有{{ app_name }}的{{ env }}环境的发布权限，请联系管理员：{{ admin_user }}
+    </div>
+    {% endif %}
 </form>
 {# pagination #}
 <div class="text-r">

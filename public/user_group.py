@@ -18,9 +18,7 @@ def is_admin_group(user):
 # 判断是否为APP管理员
 def is_app_admin(app_id, user):
     app = App.objects.get(id=app_id)
-    # if user == app.manage_user or is_admin_group(user):
-    # 以下条件用来快速测试用户权限
-    if user == app.manage_user:
+    if user == app.manage_user or is_admin_group(user):
         return True
     return False
 

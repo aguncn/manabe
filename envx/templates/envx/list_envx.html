@@ -16,66 +16,71 @@
 </div>
 <br/>
 <br/>
-<form action="{% url 'envx:change' %}" method="post" name="envForm" id="envForm">
-    {% csrf_token %}
-    <div>
-        <span class="select-box inline l">
-            <select name="envSelect" id="envSelect" class="select">
-            </select>
-            <button  class="btn btn-danger " id="envChange" >环境流转</button>
-
-        </span>
-    </div>
-    <table class="table table-border table-bordered table-bg">
-        <thead>
-        <th>
-            发布单名称
-        </th>
-        <th>
-            所属APP
-        </th>
-        <th>
-            Git Branch
-        </th>
-        <th>
-            环境
-        </th>
-        <th>
-            用户
-        </th>
-        <th>
-            时间
-        </th>
-        </thead>
-        <tbody>
-            {% for item in object_list %}
-            <tr class="text-l">
-                <td><input type="checkbox" name="serverSelect" value="{{ item.id }}">
-                    <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
-                        <a href="{% url 'deploy:detail' pk=item.id %}">
-                            {{item.name}}
-                        </a>
-                    </span>
-
-                </td>
-                <td>{{item.app_name}}</td>
-                <td>
-                    {{item.branch_build}}
-                </td>
-                <td>
+<table class="table table-border table-bordered table-bg">
+    <thead>
+    <th>
+        发布单名称
+    </th>
+    <th>
+        所属APP
+    </th>
+    <th>
+        Git Branch
+    </th>
+    <th>
+        环境
+    </th>
+    <th>
+        操作
+    </th>
+    <th>
+        用户
+    </th>
+    <th>
+        时间
+    </th>
+    </thead>
+    <tbody>
+        {% for item in object_list %}
+        <tr class="text-l">
+            <td>
+                <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
+                    <a href="{% url 'deploy:detail' pk=item.id %}">
+                        {{item.name}}
+                    </a>
+                </span>
+            </td>
+            <td>{{item.app_name}}</td>
+            <td>
+                {{item.branch_build}}
+            </td>
+            <td>
+                <span class="label label-primary radius">
                     {{item.env_name}}
-                </td>
-                <td>
-                    {{item.create_user}}
-                </td>
-                <td>{{item.change_date}}</td>
-            </tr>
-            {% endfor %}
+                </span>
+            </td>
+             <td>
+                 <span class="select-box inline l">
+                    <select class="select envSelect ">
+                        <option value=""> --- </option>
+                    </select>
+                    <button  class="btn btn-danger envChange"
+                             deploy_id="{{item.id}}" deploy_name="{{item.name}}"
+                             old_env_id="{{item.env_name.id}}"
+                    >环境流转</button>
+                 </span>
+            </td>
+            <td>
+                {{item.create_user}}
+            </td>
+            <td>{{item.change_date}}</td>
+        </tr>
+        {% endfor %}
 
-        </tbody>
+    </tbody>
 
-    </table>
-</form>
+</table>
+
 <br/>
 <div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -85,8 +90,13 @@
 				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
 			</div>
 			<div class="modal-body">
-				<p>将发布单转换到<span id="selectEnv"></span>环境？</p>
+				<p>将发布单<span id="selectDeploy"></span>转换到<span id="selectEnv"></span>环境？</p>
 			</div>
+            <form name="envForm" id="envForm" action="{% url 'envx:change' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="deploy_id" id="deploy_id" hidden/>
+                <input type="text" name="env_id" id="env_id" hidden/>
+            </form>
 			<div class="modal-footer">
 				<button class="btn btn-primary" id="changeEnvModal">确定</button>
 				<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>

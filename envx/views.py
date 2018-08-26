@@ -9,11 +9,13 @@ from django.contrib import messages
 
 from deploy.models import DeployPool
 from .models import Env
+from rightadmin.models import Action
+from public.user_group import is_right, get_app_admin
 
 
 class EnvXListView(ListView):
     template_name = 'envx/list_envx.html'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
@@ -42,12 +44,22 @@ class EnvXListView(ListView):
 
 def change(request):
     if request.POST:
-        if request.POST.get('envSelect') is None or request.POST.get('serverSelect') is None:
+        if request.POST.get('deploy_id') is None or request.POST.get('env_id') is None:
             messages.error(request, '参数错误，请重新选择！', extra_tags='c-error')
             return redirect('envx:list')
         else:
-            env_name = Env.objects.get(id=request.POST.get('envSelect'))
-            DeployPool.objects.filter(id__in=request.POST.getlist('serverSelect')).update(env_name=env_name, deploy_status='Ready')
+            deploy_id = request.POST.get('deploy_id')
+            env_id = request.POST.get('env_id')
+            deploy_item = DeployPool.objects.get(id=deploy_id)
+            action_item = Action.objects.get(name="XCHANGE")
+            app_id = deploy_item.app_name.id
+            action_id = action_item.id
+            if not is_right(app_id, action_id, 0, request.user):
+                manage_user = get_app_admin(app_id)
+                messages.error(request, '没有权限，请联系{}'.format(manage_user), extra_tags='c-error')
+                return redirect('envx:list')
+            env_name = Env.objects.get(id=env_id)
+            DeployPool.objects.filter(id=deploy_id).update(env_name=env_name, deploy_status='Ready')
             messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')
 

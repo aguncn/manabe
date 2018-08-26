@@ -8,6 +8,8 @@ from django.db.models import Q, F
 from .models import DeployPool
 from serverinput.models import Server
 from appinput.models import App
+from rightadmin.models import Action
+from public.user_group import is_right, get_app_admin
 
 from .salt_cmd_views import deploy
 
@@ -59,10 +61,20 @@ class DeployView(ListView):
         context['app_name'] = app_name
         context['deploy_version'] = deploy_version
         context['env'] = self.kwargs['env']
-        context['is_restart_status'] = App.objects.get(name=app_name).is_restart_status
         deploy_item = DeployPool.objects.get(name=deploy_version)
+        context['is_restart_status'] = deploy_item.app_name.is_restart_status
         context['deploy_type'] = deploy_item.deploy_type
         context['is_inc_tot'] = deploy_item.is_inc_tot
+
+        # 用于权限判断及前端展示
+        context['is_right'] = True
+        app_id = deploy_item.app_name.id
+        env_id = deploy_item.env_name.id
+        action_item = Action.objects.get(name="DEPLOY")
+        action_id = action_item.id
+        if not is_right(app_id, action_id, env_id, self.request.user):
+            context['is_right'] = False
+            context['admin_user'] = get_app_admin(app_id)
 
         query_string = self.request.META.get('QUERY_STRING')
         if 'page' in query_string:
@@ -104,6 +116,7 @@ class OperateView(ListView):
             query_string = '?' + query_string + '&'
         context['current_url'] = query_string
         return context
+
 
 @csrf_exempt
 def deploy_cmd(request):
