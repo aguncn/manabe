@@ -52,6 +52,8 @@ class History(CommonInfo):
                                  on_delete=models.CASCADE, verbose_name="APP应用")
     env_name = models.ForeignKey(Env, blank=True, null=True, related_name="history_env_name",
                                  on_delete=models.CASCADE, verbose_name="环境")
+    deploy_name = models.ForeignKey(DeployPool, blank=True, null=True, related_name="history_deploy",
+                                    on_delete=models.CASCADE, verbose_name="发布单")
     type = models.CharField(max_length=32, blank=True, null=True,  verbose_name="操作类型")
     content = models.CharField(max_length=1024, blank=True, null=True,  verbose_name="操作内容")
 

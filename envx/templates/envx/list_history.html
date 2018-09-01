@@ -1,0 +1,102 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 环境流转 {% endblock %}
+
+{% block content %}
+<div>
+    <span class="l">
+
+    </span>
+    <span class="select-box inline r">
+        {% include "manabe/filter.html" %}
+        <button class="btn btn-success filter_btn" type="submit">过滤</button>
+        {% include "manabe/search.html" %}
+    </span>
+</div>
+<br/>
+<br/>
+<table class="table table-border table-bordered table-bg">
+    <thead>
+    <th>
+        时间
+    </th>
+    <th>
+        所属APP
+    </th>
+    <th>
+        用户
+    </th>
+    <th>
+        环境流转
+    </th>
+    </thead>
+    <tbody>
+        {% for item in object_list %}
+        <tr class="text-l">
+            <td>
+                {{item.add_date}}
+            </td>
+            <td>{{item.app_name}}</td>
+            <td>
+                {{item.user}}
+            </td>
+            <td>
+                {{item.content}}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<br/>
+{# pagination #}
+<div class="text-r">
+    <ul>
+        {% if page_obj.has_previous %}
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">上一页</a></li>
+        {% endif %}
+        <a href="#" >
+            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        </a>
+        {% if page_obj.has_next %}
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(".search_btn").click(function(){
+    var search_pk = $("input[name='search_pk']").val() || "demo";
+    if (search_pk == "demo") {
+        $.Huimodalalert('<span class="c-error">亲，请输入关键字再进行搜索！</span>',3000);
+        return false;
+    }
+    search_pk = search_pk.replace(/(^\s*)|(\s*$)/g, "");
+    var url = "{% url 'envx:history' %}?search_pk=" + search_pk
+    console.log(url)
+    location.href = url
+});
+
+$(".filter_btn").click(function(){
+    var filter_app_name = $("select[name='App_name']").val();
+    console.log(filter_app_name);
+    if (filter_app_name.length == 0) {
+        $.Huimodalalert('<span class="c-error">亲，请选择组件再过滤！</span>',3000);
+        return false;
+    } else {
+        var url = "{% url 'envx:history' %}?app_name="+ filter_app_name;
+    }
+    console.log(url)
+    location.href = url
+});
+</script>
+{% endblock %}

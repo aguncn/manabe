@@ -2,7 +2,6 @@
 import random
 import time
 import string
-import json
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
@@ -34,7 +33,7 @@ class DeployCreateView(CreateView):
             return self.render_to_response({'form': form})
         random_letter = ''.join(random.sample(string.ascii_letters, 2))
         deploy_version = time.strftime("%Y-%m%d-%H%M%S", time.localtime()) + random_letter.upper()
-        deploy = DeployPool.objects.create(
+        DeployPool.objects.create(
             name=deploy_version,
             description=form.cleaned_data['description'],
             app_name=app,
@@ -44,7 +43,6 @@ class DeployCreateView(CreateView):
             deploy_status=DeployStatus.objects.get(name='CREATE'),
             create_user=user,
         )
-        deploy.save()
         return HttpResponseRedirect(reverse("deploy:list"))
 
     def get_success_url(self):

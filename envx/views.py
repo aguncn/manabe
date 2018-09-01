@@ -1,12 +1,12 @@
 # coding=utf8
-
+import time
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.utils import timezone
 from django.db.models import Q
 from django.contrib import messages
 
-from deploy.models import DeployPool, DeployStatus
+from deploy.models import DeployPool, DeployStatus, History
 from .models import Env
 from rightadmin.models import Action
 from public.user_group import is_right, get_app_admin
@@ -30,8 +30,38 @@ class EnvXListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
-        context['current_page'] = "deploy-list"
+        context['current_page'] = "envx-list"
         context['current_page_name'] = "环境流转"
+        query_string = self.request.META.get('QUERY_STRING')
+        if 'page' in query_string:
+            query_list = query_string.split('&')
+            query_list = [elem for elem in query_list if not elem.startswith('page')]
+            query_string = '?' + "&".join(query_list) + '&'
+        elif query_string is not None:
+            query_string = '?' + query_string + '&'
+        context['current_url'] = query_string
+        return context
+
+
+class EnvXHistoryView(ListView):
+    template_name = 'envx/list_history.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        if self.request.GET.get('search_pk'):
+            search_pk = self.request.GET.get('search_pk')
+            return History.objects.filter(
+                Q(name__icontains=search_pk) | Q(app_name__name__icontains=search_pk)).filter(type='XCHANGE')
+        if self.request.GET.get('app_name'):
+            app_name = self.request.GET.get('app_name')
+            return History.objects.filter(app_name=app_name).filter(type='XCHANGE')
+        return History.objects.filter(type='XCHANGE')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        context['current_page'] = "envx-history"
+        context['current_page_name'] = "环境流转历史"
         query_string = self.request.META.get('QUERY_STRING')
         if 'page' in query_string:
             query_list = query_string.split('&')
@@ -52,6 +82,7 @@ def change(request):
             deploy_id = request.POST.get('deploy_id')
             env_id = request.POST.get('env_id')
             deploy_item = DeployPool.objects.get(id=deploy_id)
+            org_env_name = deploy_item.env_name.name if deploy_item.env_name is not None else "BUILD"
             action_item = Action.objects.get(name="XCHANGE")
             app_id = deploy_item.app_name.id
             action_id = action_item.id
@@ -63,4 +94,21 @@ def change(request):
             deploy_status = DeployStatus.objects.get(name="READY")
             DeployPool.objects.filter(id=deploy_id).update(env_name=env_name, deploy_status=deploy_status)
             messages.success(request, '环境流转成功！', extra_tags='c-success')
+            # 构建环境流转历史记录参数
+            user = request.user;
+            app_name = deploy_item.app_name
+            content = {'before': org_env_name, 'after': env_name.name}
+            add_history(user, app_name, deploy_item, content)
             return redirect('envx:list')
+
+
+def add_history(user, app_name, deploy_name, content):
+    History.objects.create(
+        name=app_name.name + '-xchange-' + deploy_name.name + '-' + time.strftime("%Y-%m%d-%H%M%S", time.localtime()),
+        user=user,
+        app_name=app_name,
+        deploy_name=deploy_name,
+        type='XCHANGE',
+        content=content
+    )
+
