@@ -18,6 +18,11 @@ DEPLOY_TYPE_CHOICES = (
 )
 
 
+class DeployStatus(CommonInfo):
+    # 新建，编译，待发布，成功，失败， 发布中
+    memo = models.CharField(max_length=1024, blank=True, verbose_name="备注")
+
+
 class DeployPool(CommonInfo):
     name = models.CharField(max_length=100,  blank=True, null=True, verbose_name="发布单编号")
     description = models.CharField(max_length=1024, blank=True, verbose_name="描述")
@@ -31,9 +36,26 @@ class DeployPool(CommonInfo):
     deploy_type = models.CharField(max_length=255, choices=DEPLOY_TYPE_CHOICES,
                                    blank=True, null=True, verbose_name="发布程序或配置")
     is_build = models.BooleanField(default=False, verbose_name="软件是否编译成功")
-    create_user = models.ForeignKey(User,  related_name='deploy_create_user', on_delete=models.CASCADE, verbose_name="创建用户")
+    create_user = models.ForeignKey(User,  related_name='deploy_create_user',
+                                    on_delete=models.CASCADE, verbose_name="创建用户")
     nginx_url = models.URLField(default=None, blank=True, null=True, verbose_name="Tengine URL")
-    env_name = models.ForeignKey(Env, blank=True, null=True, related_name="deploy_env_name", on_delete=models.CASCADE, verbose_name="环境")
-    deploy_status = models.CharField(max_length=255, blank=True, null=True, verbose_name="发布单状态")  # 新建，编译，待发布，成功，失败
+    env_name = models.ForeignKey(Env, blank=True, null=True, related_name="deploy_env_name",
+                                 on_delete=models.CASCADE, verbose_name="环境")
+    deploy_status = models.ForeignKey(DeployStatus,  related_name='deploy_pool_status', blank=True, null=True,
+                                      on_delete=models.CASCADE, verbose_name="发布单状态")
+
+
+class History(CommonInfo):
+    user = models.ForeignKey(User,  blank=True, null=True, related_name='history_user',
+                             on_delete=models.CASCADE, verbose_name="用户")
+    app_name = models.ForeignKey(App, blank=True, null=True, related_name='history_app',
+                                 on_delete=models.CASCADE, verbose_name="APP应用")
+    env_name = models.ForeignKey(Env, blank=True, null=True, related_name="history_env_name",
+                                 on_delete=models.CASCADE, verbose_name="环境")
+    type = models.CharField(max_length=32, blank=True, null=True,  verbose_name="操作类型")
+    content = models.CharField(max_length=1024, blank=True, null=True,  verbose_name="操作内容")
+
+
+
 
 

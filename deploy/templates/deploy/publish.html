@@ -61,26 +61,9 @@
             {{item.env_name}}
         </td>
         <td>
-            {% ifequal item.deploy_status "Finish" %}
-                <span class="label label-success radius">
-                发布完成
+                <span class="label  radius label-danger">
+                {{ item.deploy_status.description}}
                 </span>
-            {% endifequal %}
-            {% ifequal item.deploy_status "Ing" %}
-                <span class="label label-warning radius">
-                发布中...
-                </span>
-            {% endifequal %}
-            {% ifequal item.deploy_status "Ready" %}
-                <span class="label label-primary radius">
-                准备发布
-                </span>
-            {% endifequal %}
-            {% ifequal item.deploy_status "Exception" %}
-                <span class="label label-danger radius">
-                发布异常
-                </span>
-            {% endifequal %}
         </td>
         <td>
             <a href="{% url 'deploy:deploy' app_name=item.app_name deploy_version=item.name env=item.env_name%}">

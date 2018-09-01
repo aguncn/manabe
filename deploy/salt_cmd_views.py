@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from django.http import JsonResponse
 
 from serverinput.models import Server
-from .models import DeployPool
+from .models import DeployPool, DeployStatus
 
 
 def deploy(subserver_list, deploy_type, is_restart_server,
@@ -141,12 +141,12 @@ def change_deploypool(server_env, deploy_version, app_name, action):
         # 使用两个条件判断发布单状态，1，所有服务器的历史发布单是否更新，2，每一个服务器发布状态有无错误。
 
         if "error" in svr_status_total:
-            deploy_status = u"Exception"
+            deploy_status = DeployStatus.objects.get(name="ERROR")
         elif len(svr_his_version_total) > 1 and ("error" not in svr_status_total):
-            deploy_status = u"Ing"
+            deploy_status = DeployStatus.objects.get(name="ING")
         elif (len(svr_his_version_total) == 1) and ("error" not in svr_status_total):
-            deploy_status = u"Finish"
+            deploy_status = DeployStatus.objects.get(name="FINISH")
         else:
-            deploy_status = u"Exception"
+            deploy_status = DeployStatus.objects.get(name="ERROR")
         deploypool_set.deploy_status = deploy_status
         deploypool_set.save()

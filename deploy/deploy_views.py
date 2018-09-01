@@ -26,8 +26,8 @@ class PublishView(ListView):
                 deploy_status__in=["CREATE", "BUILD"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__in=["CREATE", "BUILD"])
-        return DeployPool.objects.exclude(deploy_status__in=["CREATE", "BUILD"])
+            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__name__in=["CREATE", "BUILD"])
+        return DeployPool.objects.exclude(deploy_status__name__in=["CREATE", "BUILD"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

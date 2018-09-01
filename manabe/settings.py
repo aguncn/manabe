@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'public.apps.PublicConfig',
     'appinput.apps.AppinputConfig',
     'deploy.apps.DeployConfig',
     'envx.apps.EnvxConfig',

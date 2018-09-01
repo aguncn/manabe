@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from .forms import DeployForm
-from .models import DeployPool
+from .models import DeployPool, DeployStatus
 from rightadmin.models import Action
 from django.conf import settings
 from public.user_group import is_right
@@ -41,7 +41,7 @@ class DeployCreateView(CreateView):
             branch_build=form.cleaned_data['branch_build'],
             is_inc_tot=form.cleaned_data['is_inc_tot'],
             deploy_type=form.cleaned_data['deploy_type'],
-            deploy_status='CREATE',
+            deploy_status=DeployStatus.objects.get(name='CREATE'),
             create_user=user,
         )
         deploy.save()
@@ -66,11 +66,11 @@ class DeployListView(ListView):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
             return DeployPool.objects.filter(Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).filter(
-                deploy_status__in=["CREATE"])
+                deploy_status__name__in=["CREATE"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return DeployPool.objects.filter(app_name=app_name).filter(deploy_status__in=["CREATE", "BUILD"])
-        return DeployPool.objects.filter(deploy_status__in=["CREATE", "BUILD"])
+            return DeployPool.objects.filter(app_name=app_name).filter(deploy_status__name__in=["CREATE", "BUILD"])
+        return DeployPool.objects.filter(deploy_status__name__in=["CREATE", "BUILD"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib import messages
 
-from deploy.models import DeployPool
+from deploy.models import DeployPool, DeployStatus
 from .models import Env
 from rightadmin.models import Action
 from public.user_group import is_right, get_app_admin
@@ -21,11 +21,11 @@ class EnvXListView(ListView):
             search_pk = self.request.GET.get('search_pk')
             return DeployPool.objects.filter(
                 Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(
-                deploy_status__in=["CREATE"])
+                deploy_status__name__in=["CREATE"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__in=["CREATE"])
-        return DeployPool.objects.exclude(deploy_status__in=["CREATE"])
+            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__name__in=["CREATE"])
+        return DeployPool.objects.exclude(deploy_status__name__in=["CREATE"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,6 +60,7 @@ def change(request):
                 messages.error(request, '没有权限，请联系{}'.format(manage_user), extra_tags='c-error')
                 return redirect('envx:list')
             env_name = Env.objects.get(id=env_id)
-            DeployPool.objects.filter(id=deploy_id).update(env_name=env_name, deploy_status='Ready')
+            deploy_status = DeployStatus.objects.get(name="READY")
+            DeployPool.objects.filter(id=deploy_id).update(env_name=env_name, deploy_status=deploy_status)
             messages.success(request, '环境流转成功！', extra_tags='c-success')
             return redirect('envx:list')

@@ -95,15 +95,10 @@
 
         </td>
         <td>
-            {% ifequal item.deploy_status "CREATE" %}
-                新建
-            {% endifequal %}
-            {% ifequal item.deploy_status "BUILD" %}
-                编译完成
-            {% endifequal %}
+            {{ item.deploy_status.description }}
         </td>
         <td>
-            {% ifequal item.deploy_status "CREATE" %}
+            {% ifequal item.deploy_status.name "CREATE" %}
                 <button  class="btn btn-primary-outline radius buildBtn"
                          app_name="{{item.app_name}}"
                          deploy_version="{{item.name}}"
@@ -111,7 +106,7 @@
                     编译
                 </button>
             {% endifequal %}
-            {% ifequal item.deploy_status "BUILD" %}
+            {% ifequal item.deploy_status.name "BUILD" %}
                 <button  class="btn btn-success-outline radius checkBtn"
                          app_name="{{item.app_name}}"
                          deploy_version="{{item.name}}">
