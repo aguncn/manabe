@@ -1,9 +1,10 @@
+import uuid
+from django.contrib.auth.models import User
 from concurrent.futures import ThreadPoolExecutor
-
 from django.http import JsonResponse
 
 from serverinput.models import Server
-from .models import DeployPool, DeployStatus
+from .models import DeployPool, DeployStatus, History
 
 
 def deploy(subserver_list, deploy_type, is_restart_server,
@@ -47,7 +48,7 @@ def deploy(subserver_list, deploy_type, is_restart_server,
     return True
 
 
-def cmd_run(server_id, deploy_type, action, current_user_set, percent_value,
+def cmd_run(server_id, deploy_type, action, user_name, percent_value,
             dep_id=None, operation_type=None):
     server_set = Server.objects.get(id=server_id)
     tgt = server_set.name
@@ -62,7 +63,10 @@ def cmd_run(server_id, deploy_type, action, current_user_set, percent_value,
         is_inc_tot = is_inc_tot.lower()
         deploy_version = deploypool_set.name
         deploy_no = deploypool_set.deploy_no
+        do_type = 'deploy'
     else:
+        deploypool_set = None
+        do_type = 'operate'
         deploy_version = 'DEMO_VER'
         is_inc_tot = "tot"
         deploy_no = server_set.app_name.op_log_no
@@ -81,20 +85,25 @@ def cmd_run(server_id, deploy_type, action, current_user_set, percent_value,
         result_stdout = str(result)
     '''
     result_stdout = "adfadf successful!!! asdfaf"
+
     if "successful!!!" in result_stdout:
         if "deploy" in action or "rollback" in action:
             change_server(server_id, deploy_version, action, "success")
             change_deploypool(server_env, deploy_version, app_name, action)
+        content = {'msg': 'success', 'ip': server_set.ip_address, 'action': action}
+        add_history(user_name, server_set.app_name, deploypool_set, server_set.env_name, do_type, content)
     else:
         change_server(server_id, deploy_version, action, "error")
         change_deploypool(server_env, deploy_version, app_name, action)
+        content = {'msg': 'error', 'ip': server_set.ip_address, 'action': action}
+        add_history(user_name, server_set.app_name, deploypool_set, server_set.env_name, do_type, content)
         return False
     return True
 
 
 # server的deploy_status用于记录在哪一个发布步骤出错，或是全部成功
 # deploypool的deploy_status用于发布单的周期状态，创建，编译，准备好发布，发布中，发布出错，完成等状态(它不包括环境信息)。
-# 后者的状态依赖于前者状态的成功。
+# 后者的状态依赖于前者状态的成功。后者已独立出一个表来进行管理。
 def change_server(server_id, deploy_version, action, result):
     server_set = Server.objects.get(id=server_id)
     server_set.deploy_status = "{}:{}".format(action, result)
@@ -150,3 +159,29 @@ def change_deploypool(server_env, deploy_version, app_name, action):
             deploy_status = DeployStatus.objects.get(name="ERROR")
         deploypool_set.deploy_status = deploy_status
         deploypool_set.save()
+
+
+def add_history(user, app_name, deploy_name, env_name, do_type, content):
+    rid = uuid.uuid4()
+    print(rid, '@@@@@@@@@@@')
+    if do_type == 'deploy':
+        History.objects.create(
+            name=rid,
+            user=user,
+            app_name=app_name,
+            env_name=env_name,
+            deploy_name=deploy_name,
+            do_type='DEPLOY',
+            content=content
+    )
+    if do_type == 'operate':
+        History.objects.create(
+            name=rid,
+            user=user,
+            app_name=app_name,
+            env_name=env_name,
+            deploy_name=deploy_name,
+            do_type='OPERATE',
+            content=content
+        )
+    print('@@@ddd@@@@@@@@')

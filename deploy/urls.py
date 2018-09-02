@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth.decorators import login_required
 
 from .views import DeployCreateView, DeployUpdateView, DeployDetailView, DeployListView, jenkins_build, jenkins_status
-from .deploy_views import PublishView, DeployView, OperateView, deploy_cmd
+from .deploy_views import PublishView, DeployView, OperateView, HistoryView, deploy_cmd
 
 app_name = 'deploy'
 
@@ -28,4 +28,6 @@ urlpatterns += [
 
     path('operate/', login_required(OperateView.as_view()),
          name='operate'),
+    path('history/', login_required(HistoryView.as_view()),
+             name='history'),
 ]

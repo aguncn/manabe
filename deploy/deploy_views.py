@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from django.utils import timezone
 from django.db.models import Q, F
-from .models import DeployPool
+from .models import DeployPool, History
 from serverinput.models import Server
 from appinput.models import App
 from rightadmin.models import Action
@@ -66,6 +66,7 @@ class DeployView(ListView):
         deploy_item = DeployPool.objects.get(name=deploy_version)
         context['is_restart_status'] = deploy_item.app_name.is_restart_status
         context['deploy_type'] = deploy_item.deploy_type
+        context['deploy_no'] = deploy_item.deploy_no
         context['is_inc_tot'] = deploy_item.is_inc_tot
 
         # 用于权限判断及前端展示
@@ -170,7 +171,7 @@ def deploy_cmd(request):
     else:
         DeployPool.objects.filter(name=deploy_version).update(deploy_no=F('deploy_no') + 1)
         deploy_no = DeployPool.objects.get(name=deploy_version).deploy_no
-    deploy(deploy_subserver_list, deploy_type, is_restart_server, str(user_name), app_name,
+    deploy(deploy_subserver_list, deploy_type, is_restart_server, user_name, app_name,
            deploy_version, deploy_no, operation_type, env)
 
     result = {'return': "OK"}
@@ -187,3 +188,33 @@ def mod_group(alist, agroup):
             if m_value == j:
                 tmp_list[j].append(alist[i])
     return tmp_list
+
+
+class HistoryView(ListView):
+    template_name = 'deploy/list_history.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        if self.request.GET.get('search_pk'):
+            search_pk = self.request.GET.get('search_pk')
+            return History.objects.filter(
+                Q(app_name__name__icontains=search_pk)).filter(do_type__in=["DEPLOY", "OPERATE"])
+        if self.request.GET.get('app_name'):
+            app_name = self.request.GET.get('app_name')
+            return History.objects.filter(app_name__name=app_name).filter(do_type__in=["DEPLOY", "OPERATE"])
+        return History.objects.filter(do_type__in=["DEPLOY", "OPERATE"])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        context['current_page'] = "deploy-history"
+        context['current_page_name'] = "发布单列表"
+        query_string = self.request.META.get('QUERY_STRING')
+        if 'page' in query_string:
+            query_list = query_string.split('&')
+            query_list = [elem for elem in query_list if not elem.startswith('page')]
+            query_string = '?' + "&".join(query_list) + '&'
+        elif query_string is not None:
+            query_string = '?' + query_string + '&'
+        context['current_url'] = query_string
+        return context
