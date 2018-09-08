@@ -163,7 +163,6 @@ def change_deploypool(server_env, deploy_version, app_name, action):
 
 def add_history(user, app_name, deploy_name, env_name, do_type, content):
     rid = uuid.uuid4()
-    print(rid, '@@@@@@@@@@@')
     if do_type == 'deploy':
         History.objects.create(
             name=rid,
@@ -184,4 +183,3 @@ def add_history(user, app_name, deploy_name, env_name, do_type, content):
             do_type='OPERATE',
             content=content
         )
-    print('@@@ddd@@@@@@@@')

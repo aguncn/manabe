@@ -16,7 +16,7 @@ from .salt_cmd_views import deploy
 
 class PublishView(ListView):
     template_name = 'deploy/publish.html'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
@@ -47,7 +47,7 @@ class PublishView(ListView):
 
 class DeployView(ListView):
     template_name = 'deploy/deploy.html'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self, **kwargs):
         return Server.objects.filter(env_name__name=self.kwargs['env']).filter(
@@ -92,7 +92,7 @@ class DeployView(ListView):
 
 class OperateView(ListView):
     template_name = 'deploy/operate.html'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self):
         if self.request.GET.get('search_pk'):

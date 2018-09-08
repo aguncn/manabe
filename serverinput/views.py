@@ -56,7 +56,7 @@ class ServerInputListView(ListView):
     template_name = 'serverinput/list_serverinput.html'
     # model = App
     # queryset = App.objects.order_by('-change_date')
-    paginate_by = 4
+    paginate_by = 10
 
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
