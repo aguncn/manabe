@@ -1,0 +1,205 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 发布单列表 {% endblock %}
+
+{% block content %}
+<div>
+    <span class="l">
+    <a class="btn btn-primary radius"  href="{% url 'deploy:create' %}">
+        新建发布单
+    </a>
+    </span>
+    <span class="select-box inline r">
+        {% include "manabe/filter.html" %}
+        <button class="btn btn-success filter_btn" type="submit">过滤</button>
+        {% include "manabe/search.html" %}
+    </span>
+</div>
+<br/>
+<br/>
+
+<table class="table table-border table-bordered table-bg">
+    <thead>
+    <th>
+        发布单名称
+    </th>
+    <th>
+        所属APP
+    </th>
+    <th>
+        Git Branch
+    </th>
+    <th>
+        增量全量
+    </th>
+    <th>
+        部署类型
+    </th>
+    <th>
+        状态
+    </th>
+    <th>
+        操作
+    </th>
+    <th>
+        用户
+    </th>
+    <th>
+        时间
+    </th>
+    </thead>
+    <tbody>
+    {% for item in object_list %}
+    <tr class="text-l">
+        <td>
+            <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
+                <a href="{% url 'deploy:detail' pk=item.id %}">
+                    {{item.name}}
+                </a>
+            </span>
+
+        </td>
+        <td>{{item.app_name}}</td>
+        <td>
+            {{item.branch_build}}
+        </td>
+        <td>
+            {% ifequal item.is_inc_tot "TOT" %}
+                <span class="label label-secondary radius">
+                全量
+                </span>
+            {% endifequal %}
+            {% ifequal item.is_inc_tot "INC" %}
+                <span class="label label-secondary radius">
+                增量
+                </span>
+            {% endifequal %}
+        </td>
+        <td>
+            {% ifequal item.deploy_type "deployall" %}
+                <span class="label label-primary radius">
+                程序及配置
+                </span>
+            {% endifequal %}
+            {% ifequal item.deploy_type "deploypkg" %}
+                <span class="label label-primary radius">
+                程序
+                </span>
+            {% endifequal %}
+            {% ifequal item.deploy_type "deploycfg" %}
+                <span class="label label-primary radius">
+                配置
+                </span>
+            {% endifequal %}
+
+        </td>
+        <td>
+            {{ item.deploy_status.description }}
+        </td>
+        <td>
+            {% ifequal item.deploy_status.name "CREATE" %}
+                <button  class="btn btn-primary-outline radius buildBtn"
+                         app_name="{{item.app_name}}"
+                         deploy_version="{{item.name}}"
+                         jenkins_job="{{item.app_name.jenkins_job}}">
+                    编译
+                </button>
+            {% endifequal %}
+            {% ifequal item.deploy_status.name "BUILD" %}
+                <button  class="btn btn-success-outline radius checkBtn"
+                         app_name="{{item.app_name}}"
+                         deploy_version="{{item.name}}">
+                    检测
+                </button>
+            {% endifequal %}
+        </td>
+        <td>
+            {{item.create_user}}
+        </td>
+        <td>{{item.change_date}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<br/>
+<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title">构建程序发布包</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<p>
+                    APP名称：<span id="modal_app_name" ></span><br/>
+                    发布单：<span id="modal_deploy_version" class="label label-primary radius"></span><br/>
+                    Jenkins Job:<span id="modal_jenkins_job" ></span><br/><br/>
+                    <button class="btn_gen_pkg btn btn-danger">
+                        开始构建
+                    </button>
+
+
+                    <div id="gen_pkg_progress{{ forloop.counter }}" ></div>
+
+                </p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="changeEnvModal">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+{# pagination #}
+<div class="text-r">
+    <ul>
+        {% if page_obj.has_previous %}
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">上一页</a></li>
+        {% endif %}
+        <a href="#" >
+            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        </a>
+        {% if page_obj.has_next %}
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(".search_btn").click(function(){
+    var search_pk = $("input[name='search_pk']").val();
+    if (search_pk == "") {
+        $.Huimodalalert('<span class="c-error">亲，请输入关键字再进行搜索！</span>',3000);
+        return false;
+    }
+    search_pk = search_pk.replace(/(^\s*)|(\s*$)/g, "");
+    var url = "{% url 'deploy:list' %}?search_pk=" + search_pk
+    console.log(url)
+    location.href = url
+});
+
+$(".filter_btn").click(function(){
+    var filter_app_name = $("select[name='App_name']").val();
+    console.log(filter_app_name);
+    if (filter_app_name.length == 0) {
+        $.Huimodalalert('<span class="c-error">亲，请选择组件再过滤！</span>',3000);
+        return false;
+    } else {
+        var url = "{% url 'deploy:list' %}?app_name="+ filter_app_name;
+    }
+    console.log(url)
+    location.href = url
+});
+
+{% include "deploy/build.js" %}
+
+</script>
+
+{% endblock %}

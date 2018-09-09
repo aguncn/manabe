@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'lib/jquery/1.9.1/jquery.min.js'%}"></script>
+
+<select class="select" style="width:250px;" id="id_app_name" name="App_name">
+    <option value="" selected="selected">选择组件</option>
+</select>
+
+<script>
+    $.ajax({
+        type: "GET",
+        url: "{% url 'public:get-app' %}",
+        dataType : "json",
+        success: function(data) {
+            console.log(data);
+            $.each(data, function(index,value){
+                $('#id_app_name').append('<option value="' + index + '">' + value + '</option>');
+            });
+        },
+        error : function(){
+            alert("系统出现问题");
+        }
+    });
+</script>

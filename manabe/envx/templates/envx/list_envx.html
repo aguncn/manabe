@@ -1,0 +1,155 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 环境流转 {% endblock %}
+
+{% block content %}
+<div>
+    <span class="l">
+
+    </span>
+    <span class="select-box inline r">
+        {% include "manabe/filter.html" %}
+        <button class="btn btn-success filter_btn" type="submit">过滤</button>
+        {% include "manabe/search.html" %}
+    </span>
+</div>
+<br/>
+<br/>
+<table class="table table-border table-bordered table-bg">
+    <thead>
+    <th>
+        发布单名称
+    </th>
+    <th>
+        所属APP
+    </th>
+    <th>
+        Git Branch
+    </th>
+    <th>
+        环境
+    </th>
+    <th>
+        操作
+    </th>
+    <th>
+        用户
+    </th>
+    <th>
+        时间
+    </th>
+    </thead>
+    <tbody>
+        {% for item in object_list %}
+        <tr class="text-l">
+            <td>
+                <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
+                    <a href="{% url 'deploy:detail' pk=item.id %}">
+                        {{item.name}}
+                    </a>
+                </span>
+            </td>
+            <td>{{item.app_name}}</td>
+            <td>
+                {{item.branch_build}}
+            </td>
+            <td>
+                <span class="label label-primary radius">
+                    {{item.env_name}}
+                </span>
+            </td>
+             <td>
+                 <span class="select-box inline l">
+                    <select class="select envSelect ">
+                        <option value=""> --- </option>
+                    </select>
+                    <button  class="btn btn-danger envChange"
+                             deploy_id="{{item.id}}" deploy_name="{{item.name}}"
+                             old_env_id="{{item.env_name.id}}"
+                    >环境流转</button>
+                 </span>
+            </td>
+            <td>
+                {{item.create_user}}
+            </td>
+            <td>{{item.change_date}}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<br/>
+<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header">
+				<h3 class="modal-title">确认对话框</h3>
+				<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body">
+				<p>将发布单<span id="selectDeploy"></span>转换到<span id="selectEnv"></span>环境？</p>
+			</div>
+            <form name="envForm" id="envForm" action="{% url 'envx:change' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="deploy_id" id="deploy_id" hidden/>
+                <input type="text" name="env_id" id="env_id" hidden/>
+            </form>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="changeEnvModal">确定</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+{# pagination #}
+<div class="text-r">
+    <ul>
+        {% if page_obj.has_previous %}
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">上一页</a></li>
+        {% endif %}
+        <a href="#" >
+            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        </a>
+        {% if page_obj.has_next %}
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(".search_btn").click(function(){
+    var search_pk = $("input[name='search_pk']").val() || "demo";
+    if (search_pk == "demo") {
+        $.Huimodalalert('<span class="c-error">亲，请输入关键字再进行搜索！</span>',3000);
+        return false;
+    }
+    search_pk = search_pk.replace(/(^\s*)|(\s*$)/g, "");
+    var url = "{% url 'envx:list' %}?search_pk=" + search_pk
+    console.log(url)
+    location.href = url
+});
+
+$(".filter_btn").click(function(){
+    var filter_app_name = $("select[name='App_name']").val();
+    console.log(filter_app_name);
+    if (filter_app_name.length == 0) {
+        $.Huimodalalert('<span class="c-error">亲，请选择组件再过滤！</span>',3000);
+        return false;
+    } else {
+        var url = "{% url 'envx:list' %}?app_name="+ filter_app_name;
+    }
+    console.log(url)
+    location.href = url
+});
+{% include "envx/envx.js" %}
+</script>
+{% endblock %}
