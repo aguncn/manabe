@@ -53,7 +53,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-manabe/db.sqlite3
+db.sqlite3
 
 # Flask stuff:
 instance/
@@ -89,7 +89,7 @@ env.bak/
 venv.bak/
 
 # IDE
-manabe/.idea/
+.idea/
 
 # Spyder project settings
 .spyderproject
