@@ -1,0 +1,125 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 新建发布单(上传) {% endblock %}
+
+{% block ext-css %}
+
+<link rel="stylesheet" href="{% static 'lib/bootstrap3-dialog/css/bootstrap-dialog.min.css'%}" />
+<link rel="stylesheet" href="{% static 'lib/jquery-file-upload/css/jquery.fileupload.css'%}" />
+<link rel="stylesheet" href="{% static 'lib/jquery-file-upload/css/jquery.fileupload-ui.css'%}" />
+{% endblock%}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="Huialert Huialert-error"><i class="Hui-iconfont">&#xe6a6;</i>{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<form action="" method="post" class="form form-horizontal" id="demoform-1">
+    {% csrf_token %}
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.name.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            <input type="text" id="name" disabled="disabled" class="input-text" placeholder="自动生成">
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.description.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.description }}
+            {% for error in form.description.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.app_name.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.app_name }}
+            {% for error in form.app_name.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.file_path.label_tag }}：
+            {% for error in form.file_path.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </label>
+        <div id="upload-drop " class="formControls col-xs-8 col-sm-9">
+            <span class="btn btn-success fileinput-button">
+            <span>选择上传文件</span>
+                <input id="fileupload"  name="files[]" type="file" multiple="multiple"
+                       data-url="{% url 'deploy:file-upload' %}">
+            </span>
+            <span class="progress_percent"></span>
+            <input type="text" class="input-text col-xs-8 col-sm-9" id="file_path"
+                   name="file_path"  value="" hidden readonly/>
+            <div class="progress">
+                <div class="progress-bar progress-bar-warning">
+                    <span class="sr-only" style="width:0%"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.is_inc_tot.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.is_inc_tot }}
+            {% for error in form.is_inc_tot.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.deploy_type.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.deploy_type }}
+            {% for error in form.deploy_type.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+            <input class="btn btn-primary radius" type="submit" value="新建">
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block ext-jss %}
+<script src="{% static 'lib/bootstrap3-dialog/js/bootstrap-dialog.min.js'%}"></script>
+<script src="{% static 'lib/jquery-file-upload/js/vendor/jquery.ui.widget.js'%}"></script>
+<script src="{% static 'lib/jquery-file-upload/js/jquery.fileupload.js'%}"></script>
+<script src="{% static 'lib/jquery-file-upload/js/jquery.iframe-transport.js'%}"></script>
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(function(){
+
+            $('#fileupload').fileupload({
+                dataType: 'json',
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('.progress-bar .sr-only').css(
+                        'width',
+                        progress + '%'
+                    );
+                    $('.progress_percent').text(progress + '%');
+                },
+
+                done: function(e, data) {
+                    uploadfilename = data.files[0].name
+                    $('.progress_percent').text("上传完成");
+                    $("#file_path").attr("value", uploadfilename);
+                    $("#file_path").attr("hidden", false);
+                }
+            });
+})
+</script>
+{% endblock %}

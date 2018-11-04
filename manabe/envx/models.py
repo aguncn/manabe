@@ -1,6 +1,5 @@
 from django.db import models
-from public.modules import CommonInfo
-# Create your models here.
+from public.models import CommonInfo
 
 
 class Env(CommonInfo):

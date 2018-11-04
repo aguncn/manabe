@@ -1,9 +1,9 @@
 from django.contrib.auth.models import Group
 from appinput.models import App
-from rightadmin.models import Env, Permission, Action
+from rightadmin.models import Permission
 
 
-# 判断是否超级管理员组
+# 判断是否前台管理员组
 def is_admin_group(user):
     try:
         user_group = Group.objects.get(user=user)

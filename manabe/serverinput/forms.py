@@ -98,8 +98,22 @@ class ServerForm(forms.ModelForm):
         ),
     )
 
+    app_user = forms.CharField(
+        error_messages={'required': "不能为空"},
+        label=u"启动用户",
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': "root",
+                'class': 'input-text',
+            }
+        ),
+    )
+
     class Meta:
         model = Server
         # exclude = ['app_args', 'op_user']
-        fields = ('name', 'description', 'ip_address', 'port', 'salt_name', 'app_name', 'env_name', 'op_user')
+        fields = ('name', 'description',
+                  'ip_address', 'port',
+                  'salt_name', 'app_name',
+                  'env_name', 'app_user', 'op_user')
 

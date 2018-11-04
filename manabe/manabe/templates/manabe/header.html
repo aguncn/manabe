@@ -11,13 +11,13 @@
 				<ul class="cl">
 					<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 快捷操作 <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="{% url 'deploy:create' %}">新增发布单</a></li>
-							<li><a href="{% url 'envx:list' %}"> 环境流转</a></li>
-							<li><a href="{% url 'deploy:publish' %}"> 部署软件</a></li>
+							<li><a href="#">新增发布单</a></li>
+							<li><a href="#"> 环境流转</a></li>
+							<li><a href="#"> 部署软件</a></li>
+						</ul>
+					</li>
 				</ul>
-			</li>
-		</ul>
-	</nav>
+			</nav>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
 					{% if user.is_authenticated %}

@@ -25,24 +25,23 @@ class AppInputCreateView(CreateView):
             return HttpResponse(result)
 
     def form_invalid(self, form):
+        print(form)
         return self.render_to_response({'form': form})
 
     def form_valid(self, form):
-        user = self.request.user
-        app = App.objects.create(
+        App.objects.create(
             name=form.cleaned_data['name'],
             description=form.cleaned_data['description'],
             jenkins_job=form.cleaned_data['jenkins_job'],
+            git_url=form.cleaned_data['git_url'],
+            build_cmd=form.cleaned_data['build_cmd'],
             package_name=form.cleaned_data['package_name'],
+            zip_package_name=form.cleaned_data['zip_package_name'],
             is_restart_status=form.cleaned_data['is_restart_status'],
-            script=form.cleaned_data['script'],
-            manage_user=user,
+            script_url=form.cleaned_data['script_url'],
+            manage_user=form.cleaned_data['manage_user'],
         )
-        app.save()
         return HttpResponseRedirect(reverse("appinput:list"))
-
-    def get_success_url(self):
-        return reverse_lazy("appinput:list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,7 +98,8 @@ class AppInputUpdateView(UpdateView):
         # 定义用户权限
         app_id = request.path.split("/")[-2]
         app_item = App.objects.get(id=app_id)
-        if is_admin_group(self.request.user) or app_item.manage_user == self.request.user:
+        if is_admin_group(self.request.user) \
+                or app_item.manage_user == self.request.user:
             return super().get(request, *args, **kwargs)
         else:
             result = "亲，没有权限，只有管理员才可进入！"
@@ -110,7 +110,8 @@ class AppInputUpdateView(UpdateView):
     def post(self, request, *args, **kwargs):
         app_id = request.path.split("/")[-2]
         app_item = App.objects.get(id=app_id)
-        if is_admin_group(self.request.user) or app_item.manage_user == self.request.user:
+        if is_admin_group(self.request.user) 
+                or app_item.manage_user == self.request.user:
             return super().post(request, *args, **kwargs)
         else:
             result = "亲，没有权限，想用非正规方式修改吧？"
@@ -121,7 +122,7 @@ class AppInputUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = "appinput-edit"
         context['current_page_name'] = "编辑APP应用"
-        context['app_id'] = self.kwargs.get(self.pk_url_kwarg, None)
+        context['app_id'] = self.kwargs.get(self.pk_url_kwarg)
         return context
 
     def get_success_url(self):

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from public.modules import CommonInfo
+from public.models import CommonInfo
 from appinput.models import App
 from envx.models import Env
 

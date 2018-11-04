@@ -9,10 +9,13 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.utils import timezone
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.conf import settings
+from django.http import JsonResponse
+import jenkins
 from .forms import DeployForm
 from .models import DeployPool, DeployStatus
+from appinput.models import App
 from rightadmin.models import Action
-from django.conf import settings
 from public.user_group import is_right
 
 
@@ -116,19 +119,115 @@ class DeployUpdateView(UpdateView):
         return reverse_lazy("deploy:list")
 
 
+# 使用python-jenkins第三方库来提交jenkins任务
 @csrf_exempt
 def jenkins_build(request):
-    pass
+    # 获取前端ajax参数
+    app_name = request.POST.get('app_name')
+    deploy_version = request.POST.get('deploy_version')
+    jenkins_job = request.POST.get('jenkins_job')
+    deploy_version_set = DeployPool.objects.get(name=deploy_version)
+    branch_build = deploy_version_set.branch_build
+    app_set = App.objects.get(name=app_name)
+    git_url = app_set.git_url
+    package_name = app_set.package_name
+    dir_build_file = app_set.dir_build_file
+    zip_package_name = app_set.zip_package_name
+    build_cmd = app_set.build_cmd
+
+    # 构造jenkins job的字典参数，这些参数在jenkins里是字符型参数
+    jenkins_dict = {
+        'git_url': git_url,
+        'branch_build': branch_build,
+        'package_name': package_name,
+        'app_name': app_name,
+        'deploy_version': deploy_version,
+        'dir_build_file': dir_build_file,
+        'zip_package_name': zip_package_name,
+        'build_cmd': build_cmd
+    }
+
+    if all_is_not_null([jenkins_job, app_name, branch_build, deploy_version]):
+        # 按python-jenkins的API要求，生成jenkins服务器实例，并传递参数给build_job
+        jenkins_url = settings.JENKINS_URL
+        jenkins_username = settings.JENKINS_USERNAME
+        jenkins_password = settings.JENKINS_PASSWORD
+        server = jenkins.Jenkins(url=jenkins_url,
+                                 username=jenkins_username,
+                                 password=jenkins_password)
+        next_build_number = server.get_job_info(jenkins_job)['nextBuildNumber']
+        try:
+            server.build_job(jenkins_job, jenkins_dict)
+            from time import sleep
+            sleep(10)
+            result = {"return": "success", "build_number": next_build_number}
+            status_code = 201
+        except Exception as e:
+            print(e)
+            result = {"return": "error", "build_number": next_build_number}
+            status_code = 501
+        return JsonResponse(result, status=status_code)
+
+    else:
+        result = {"return": "error"}
+        return JsonResponse(result, status=501)
 
 
 def all_is_not_null(*args):
     for value in args:
-        # print value
         if value == 'None' or len(value) == 0:
             return False
     return True
 
 
+# 前端通过ajax实时获取jenkins的编译任务的进度
 @csrf_exempt
 def jenkins_status(request):
-    pass
+    jenkins_job = request.POST.get('jenkins_job')
+    next_build_number = int(request.POST.get('next_build_number'))
+    jenkins_url = settings.JENKINS_URL
+    jenkins_username = settings.JENKINS_USERNAME
+    jenkins_password = settings.JENKINS_PASSWORD
+    server = jenkins.Jenkins(url=jenkins_url,
+                             username=jenkins_username,
+                             password=jenkins_password)
+    # 通过get_build_info方法，可以获取编译状态及结果状态
+    building_info = server.get_build_info(jenkins_job, next_build_number)["building"]
+    built_result = server.get_build_info(jenkins_job, next_build_number)["result"]
+    result = {"return": "building",
+              "building_info": building_info,
+              "built_result": built_result}
+    if built_result == 'SUCCESS':
+        git_seg = server.get_build_info(jenkins_job, next_build_number)["actions"][5]
+        git_version = git_seg['lastBuiltRevision']['SHA1']
+        result["git_version"] = git_version
+    return JsonResponse(result, status=200)
+
+
+# 接受前台数据，更新发布单
+@csrf_exempt
+def update_deploypool_jenkins(request):
+    current_user = request.user
+    app_name = request.POST.get('app_name')
+    deploy_version = request.POST.get('deploy_version')
+    next_build_number = request.POST.get('next_build_number')
+    git_version = request.POST.get('git_version')
+    # 按nginx服务器地址，app应用，发布单号的目录层次构建软件包目录
+    nginx_base_url = settings.NGINX_URL
+    nginx_url = "{}/{}/{}".format(nginx_base_url, app_name, deploy_version)
+    try:
+        DeployPool.objects.filter(name=deploy_version).update(
+            jenkins_number=str(next_build_number),
+            code_number=git_version,
+            nginx_url=nginx_url,
+            deploy_status=DeployStatus.objects.get(name='BUILD'),
+            create_user=current_user
+        )
+        result = {"return": "success", "build_number": next_build_number}
+        status_code = 201
+    except Exception as e:
+        print(e)
+        result = {"return": "error", "build_number": next_build_number}
+        status_code = 501
+    return JsonResponse(result, status=status_code)
+

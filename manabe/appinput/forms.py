@@ -13,6 +13,7 @@ class AppForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     name = forms.CharField(
+        required=True,
         error_messages={'required': "不能为空"},
         label=u"APP组件名称",
         widget=forms.TextInput(
@@ -42,12 +43,50 @@ class AppForm(forms.ModelForm):
             }
         ),
     )
-    package_name = forms.CharField(
+    git_url = forms.CharField(
         error_messages={'required': "不能为空"},
+        label=u"GIT地址",
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': "GIT地址",
+                'class': 'input-text',
+            }
+        ),
+    )
+    dir_build_file = forms.CharField(
+        error_messages={'required': "不能为空"},
+        label=u"编译目录",
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': "./",
+                'class': 'input-text',
+            }
+        ),
+    )
+    build_cmd = forms.CharField(
+        error_messages={'required': "不能为空"},
+        label=u"编译命令",
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': "编译命令",
+                'class': 'input-text',
+            }
+        ),
+    )
+    package_name = forms.CharField(
         label=u"软件包名称",
         widget=forms.TextInput(
             attrs={
-                'placeholder': "Package Name",
+                'placeholder': "编译后的软件包名称，没有可不填",
+                'class': 'input-text',
+            }
+        ),
+    )
+    zip_package_name = forms.CharField(
+        label=u"压缩包名称",
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': "软件包和配置文件集成的压缩包，没有可不填",
                 'class': 'input-text',
             }
         ),
@@ -73,14 +112,12 @@ class AppForm(forms.ModelForm):
         ),
     )
 
-    script = forms.CharField(
-        required=True,
-        label=u"APP脚本",
-        widget=forms.Textarea(
+    script_url = forms.CharField(
+        label=u"app脚本链接",
+        widget=forms.TextInput(
             attrs={
-                'rows': 15,
-                'style': """width:75%;""",
-                'class': 'textarea',
+                'placeholder': "http://[nginx]/scripts/[app_name]/[script_name]",
+                'class': 'input-text',
             }
         ),
     )

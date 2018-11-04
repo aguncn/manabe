@@ -1,16 +1,17 @@
 <!--_menu 作为公共模版分离出去-->
 <aside class="Hui-aside">
 	<div class="menu_dropdown bk_2">
-		<dl id="menu-article">
+		<dl id="menu-deploy-list">
 			<dt><i class="Hui-iconfont">&#xe604;</i> 发布单<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a href="{% url 'deploy:list' %}">发布单列表</a></li>
-					<li><a href="{% url 'deploy:create' %}">新建发布单</a></li>
+					<li><a href="{% url 'deploy:create' %}">新建发布单(编译)</a></li>
+					<li><a href="{% url 'deploy:upload' %}">新建发布单(上传)</a></li>
 				</ul>
 			</dd>
 		</dl>
-		<dl id="menu-picture">
+		<dl id="menu-envx">
 			<dt><i class="Hui-iconfont">&#xe6de;</i> 环境<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
@@ -19,17 +20,17 @@
 				</ul>
 			</dd>
 		</dl>
-		<dl id="menu-product">
+		<dl id="menu-deploy">
 			<dt><i class="Hui-iconfont">&#xe603;</i> 部署<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a href="{% url 'deploy:publish' %}">发布</a></li>
-					<li><a href="product-category.html" title="分类管理">启停</a></li>
+					<li><a href="{% url 'deploy:operate' %}">启停</a></li>
 					<li><a href="{% url 'deploy:history' %}">部署历史</a></li>
 				</ul>
 			</dd>
 		</dl>
-		<dl id="menu-comments">
+		<dl id="menu-app-server">
 			<dt><i class="Hui-iconfont">&#xe61d;</i> 管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
@@ -40,7 +41,7 @@
 				</ul>
 			</dd>
 		</dl>
-		<dl id="menu-member">
+		<dl id="menu-staus">
 			<dt><i class="Hui-iconfont">&#xe61e;</i> 统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
@@ -49,13 +50,13 @@
 				</ul>
 			</dd>
 		</dl>
-		<dl id="menu-admin">
+		<dl id="menu-doc">
 			<dt><i class="Hui-iconfont">&#xe623;</i> 文档<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a href="admin-role.html" >ChangeLog</a></li>
 					<li><a href="admin-permission.html">操作文档</a></li>
-					<li><a href="{% url 'donation' %}">捐赠</a></li>
+					<li><a href="#">捐赠</a></li>
 				</ul>
 			</dd>
 		</dl>

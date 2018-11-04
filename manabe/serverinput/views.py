@@ -36,9 +36,9 @@ class ServerInputCreateView(CreateView):
             salt_name=form.cleaned_data['salt_name'],
             app_name=form.cleaned_data['app_name'],
             env_name=form.cleaned_data['env_name'],
+            app_user=form.cleaned_data['app_user'],
             op_user=current_user_set,
         )
-        app.save()
         return HttpResponseRedirect(reverse("serverinput:list"))
 
     def get_success_url(self):
@@ -54,8 +54,6 @@ class ServerInputCreateView(CreateView):
 
 class ServerInputListView(ListView):
     template_name = 'serverinput/list_serverinput.html'
-    # model = App
-    # queryset = App.objects.order_by('-change_date')
     paginate_by = 10
 
     def get_queryset(self):

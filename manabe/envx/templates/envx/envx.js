@@ -22,7 +22,7 @@ $(document).ready(function() {
         deploy_id = $(this).attr("deploy_id");
         deploy_name = $(this).attr("deploy_name");
         old_env_id = $(this).attr("old_env_id");
-        env_id = $(this).prev().find("option:selected").index();
+        env_id = $(this).prev().find("option:selected").val();
         env_name = $(this).prev().find("option:selected").text()
         console.log(old_env_id + ':' + env_id);
         if (old_env_id == env_id || env_id == "") {

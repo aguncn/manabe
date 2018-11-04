@@ -21,11 +21,13 @@ class EnvXListView(ListView):
             search_pk = self.request.GET.get('search_pk')
             return DeployPool.objects.filter(
                 Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(
-                deploy_status__name__in=["CREATE"])
+                deploy_status__name__in=["CREATE"]).order_by("-change_date")
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__name__in=["CREATE"])
-        return DeployPool.objects.exclude(deploy_status__name__in=["CREATE"])
+            return DeployPool.objects.filter(app_name=app_name).exclude(
+                deploy_status__name__in=["CREATE"]).order_by("-change_date")
+        return DeployPool.objects.exclude(deploy_status__name__in=["CREATE"])\
+            .order_by("-change_date")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,7 +53,8 @@ class EnvXHistoryView(ListView):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
             return History.objects.filter(
-                Q(name__icontains=search_pk) | Q(app_name__name__icontains=search_pk)).filter(do_type='XCHANGE')
+                Q(name__icontains=search_pk) |
+                Q(app_name__name__icontains=search_pk)).filter(do_type='XCHANGE')
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
             return History.objects.filter(app_name=app_name).filter(do_type='XCHANGE')

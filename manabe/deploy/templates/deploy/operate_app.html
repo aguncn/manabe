@@ -1,0 +1,166 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 部署服务器列表 {% endblock %}
+{% block ext-css%}
+<style id="antiClickjack">body{display:none !important;}</style>
+{% endblock%}
+
+{% block content %}
+<div>
+    <span class="l">
+        请仔细确认发布信息：
+        <span class="label label-primary radius" id="id_app_name"
+        app_name="{{ app_name }}">
+            {{ app_name }}
+        </span>
+        <span class="label label-primary radius" id="id_env"
+        env="{{ env }}">
+            {{ env }}
+        </span>
+        <span class="label label-primary radius" id="id_op_log_no"
+        op_log_no="{{ op_log_no }}" mablog_url="{{mablog_url}}">
+            <a  href="{{mablog_url}}/wslog/log_show/?app_name={{app_name}}&deploy_version=Demo&operation_no={{op_log_no}}&env_name={{env}}" target="_blank" >
+                部署日志:{{ op_log_no }}
+            </a>
+        </span>
+    </span>
+
+</div>
+<br/>
+<br/>
+<form  action="" method="post" name="serverForm" id="serverForm">
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+        <th>
+            <input type="checkbox" name="SelectAllServer">
+            salt_name
+        </th>
+        <th>
+            ip地址
+        </th>
+        <th>
+            端口
+        </th>
+        <th>
+            APP
+        </th>
+        <th>
+            环境
+        </th>
+        <th>
+            用户
+        </th>
+        <th>
+            时间
+        </th>
+        </thead>
+        <tbody>
+        {% for item in object_list %}
+        <tr class="text-l">
+            <td>
+                <input type="checkbox" name="serverSelect" value="{{ item.id }}">
+                {{item.salt_name}}
+            </td>
+            <td>{{item.ip_address}}</td>
+            <td>{{item.port}}</td>
+            <td>{{item.app_name}}</td>
+            <td>
+                {{item.env_name}}
+            </td>
+            <td>
+                {{item.op_user}}
+            </td>
+            <td>{{item.change_date}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <br/>
+    {% if is_right %}
+    <div class="text-l">
+        <input type="text" name="operation_type"  value="operate" hidden/>
+        <input type="text" name="deploy_version"  value="{{ deploy_version }}" hidden/>
+        <input type="text" name="env"  value="{{ env }}" hidden/>
+        <input type="text" name="app_name"  value="{{ app_name }}" hidden/>
+        <span class="select-box inline l">
+            <select class="select" name="sp_type" id="sp_select" onChange="getParallelOptions(this.value)">
+                <option selected value="serial_deploy">串行</option>
+                <option value="parallel_deploy">并行</option>
+            </select>
+        </span>
+        <span class="select-box inline l">
+            <select class="select" name="deploy_type" id="deploy_type" >
+                <option  value="">请选择</option>
+                <option  value="restart">重启</option>
+                <option  value="start">启动</option>
+                <option  value="stop">停止</option>
+            </select>
+        </span>
+        <span >
+            <button class="btn btn-danger radius" id="btn-operate">立即操作</button>
+        </span>
+    </div>
+    {% else %}
+    <div class="Huialert Huialert-error"><i class="Hui-iconfont">&#xe6a6;</i>
+        你没有操作权限，请联系管理员：{{ admin_user }}
+    </div>
+    {% endif %}
+</form>
+{# pagination #}
+<div class="text-r">
+    <ul>
+        {% if page_obj.has_previous %}
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">上一页</a></li>
+        {% endif %}
+        <a href="#" >
+            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        </a>
+        {% if page_obj.has_next %}
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+        {% else %}
+           <a href="" class="btn btn-primary-outline radius">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+<style>
+#deploylogout{
+    padding:10px;
+    background-color:#3399CC;
+    color:#FFFFFF;
+    width:820px;
+    height:460px;
+    border-radius:5px;
+    display:none;
+    position: absolute;
+    top:22%;
+    left:50%;
+    margin-left:-300px;
+    margin-top:-150px;
+}
+</style>
+<div id="deploylogout">
+    日志输出：
+    <span class="uk-float-right">
+            <button  id="close_deploylogout" class="btn btn-info" onclick="document.getElementById('deploylogout').style.display='none'">关闭</button>
+    </span>
+    <iframe id="iframe_log"  src="" width="800px" height="400"></iframe>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+
+
+    if (self === top) {
+    var antiClickjack = document.getElementById("antiClickjack");
+    antiClickjack.parentNode.removeChild(antiClickjack);
+    } else {
+    top.location = self.location;
+    }
+    {% include "deploy/deploy.js" %}
+    </script>
+{% endblock %}

@@ -6,7 +6,8 @@
 <form action="" method="post" class="form form-horizontal" id="demoform-1">
     {% csrf_token %}
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.name }}
             {% for error in form.name.errors %}
@@ -15,7 +16,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.description.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.description.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.description }}
             {% for error in form.description.errors %}
@@ -24,7 +26,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.ip_address.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.ip_address.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.ip_address }}
             {% for error in form.ip_address.errors %}
@@ -33,7 +36,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.port.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.port.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.port }}
             {% for error in form.port.errors %}
@@ -42,7 +46,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.salt_name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.salt_name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.salt_name }}
             {% for error in form.salt_name.errors %}
@@ -51,7 +56,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.app_name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.app_name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.app_name }}
             {% for error in form.app_name.errors %}
@@ -60,10 +66,22 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.env_name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.env_name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.env_name }}
             {% for error in form.env_name.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.app_user.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.app_user }}
+            {% for error in form.app_user.errors %}
                 <span>{{ error }}</span>
             {% endfor %}
         </div>

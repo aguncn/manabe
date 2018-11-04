@@ -33,10 +33,46 @@
         </div>
     </div>
     <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.git_url.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.git_url }}
+            {% for error in form.git_url.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.dir_build_file.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.dir_build_file }}
+            {% for error in form.dir_build_file.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.build_cmd.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.build_cmd }}
+            {% for error in form.build_cmd.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
         <label class="form-label col-xs-4 col-sm-3">{{ form.package_name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.package_name }}
             {% for error in form.package_name.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.zip_package_name.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.zip_package_name }}
+            {% for error in form.zip_package_name.errors %}
                 <span>{{ error }}</span>
             {% endfor %}
         </div>
@@ -52,10 +88,19 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.script.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">{{ form.manage_user.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
-            {{ form.script }}
-            {% for error in form.script.errors %}
+            {{ form.manage_user }}
+            {% for error in form.manage_user.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-3">{{ form.script_url.label_tag }}：</label>
+        <div class="formControls col-xs-8 col-sm-9">
+            {{ form.script_url }}
+            {% for error in form.script_url.errors %}
                 <span>{{ error }}</span>
             {% endfor %}
         </div>
@@ -66,10 +111,4 @@
         </div>
     </div>
 </form>
-{% endblock %}
-
-{% block script %}
-<script>
-
-</script>
 {% endblock %}

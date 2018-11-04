@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%u^=%+zs(k&r5ad=z26ve-9h1ttpiu$wjh-0(gre@!)44quz-s'
+SECRET_KEY = 't7u-=z($kyhr8s=c-^^3l2w(t56#*97s!4d34zl)qvh2lh@nxo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'deploy.apps.DeployConfig',
     'envx.apps.EnvxConfig',
     'rightadmin.apps.RightadminConfig',
-    'serverinput.apps.ServerinputConfig',
+    'serverinput.apps.ServerinputConfig'
 ]
 
 MIDDLEWARE = [
@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'manabe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'manabe',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'USER': 'root',
+        'PASSWORD': 'password',
     }
 }
 
@@ -90,7 +94,6 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 '''
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -110,8 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'zh-Hans'
-
+LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
@@ -126,8 +128,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-NGINX_URL = "http://192.168.1.112:8888/"
-JENKINS_URL = "http://192.168.1.112:8080/"
-SALT_URL = "http://192.168.1.112/"
+NGINX_URL = "http://192.168.1.111"
+MABLOG_URL = "http://127.0.0.1:8888"
+JENKINS_URL = "http://192.168.1.112:8088/"
+JENKINS_USERNAME = 'root'
+JENKINS_PASSWORD = 'adminadmin'
