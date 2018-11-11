@@ -18,13 +18,13 @@
 <table class="table table-border table-bordered table-bg">
     <thead>
     <th>
-        App
+        发布单
+    </th>
+    <th>
+        应用服务
     </th>
     <th>
         环境
-    </th>
-    <th>
-        发布单
     </th>
     <th>
         部署类型
@@ -43,14 +43,23 @@
     {% for item in object_list %}
     <tr class="text-l">
         <td>
-            {{item.app_name}}
-        </td>
-        <td>{{item.env_name}}</td>
-        <td>
             {{item.deploy_name}}
         </td>
+        <td>{{item.app_name}}</td>
         <td>
-            {{item.do_type}}
+            {{item.env_name}}
+        </td>
+        <td>
+            {% ifequal item.do_type "DEPLOY" %}
+            <span class="label  radius label-primary">
+                软件部署
+            </span>
+            {% else %}
+            <span class="label  radius label-success">
+                服务启停
+            </span>
+            {% endifequal %}
+
         </td>
         <td>
             {{ item.content}}
@@ -93,7 +102,7 @@ $(".search_btn").click(function(){
         return false;
     }
     search_pk = search_pk.replace(/(^\s*)|(\s*$)/g, "");
-    var url = "{% url 'deploy:publish' %}?search_pk=" + search_pk
+    var url = "{% url 'deploy:history' %}?search_pk=" + search_pk
     console.log(url)
     location.href = url
 });
@@ -105,7 +114,7 @@ $(".filter_btn").click(function(){
         $.Huimodalalert('<span class="c-error">亲，请选择组件再过滤！</span>',3000);
         return false;
     } else {
-        var url = "{% url 'deploy:publish' %}?app_name="+ filter_app_name;
+        var url = "{% url 'deploy:history' %}?app_name="+ filter_app_name;
     }
     console.log(url)
     location.href = url

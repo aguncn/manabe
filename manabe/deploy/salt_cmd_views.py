@@ -38,11 +38,11 @@ def deploy(subserver_list, deploy_type, is_restart_server,
             percent_value = "%.0f%%" % ((index+1)/cmd_len*100)
             # 多线程版本，应用为IO密集型，适合threading模式
 
-            server = []
-            for sub in item:
-                server.append(sub)
-            server_len = len(server)
-            for data in executor.map(cmd_run, server, [cmd] * server_len,
+            server_id = []
+            for itme_id in item:
+                server_id.append(itme_id)
+            server_len = len(server_id)
+            for data in executor.map(cmd_run, server_id, [cmd] * server_len,
                                      [user_name] * server_len, [percent_value] * server_len,
                                      [deploy_version] * server_len, [operation_type] * server_len):
                 if not data:
@@ -52,28 +52,24 @@ def deploy(subserver_list, deploy_type, is_restart_server,
 
 
 def cmd_run(server_id, action, user_name, percent_value,
-            dep_id=None, operation_type=None):
+            deploy_version=None, operation_type=None):
     server_set = Server.objects.get(id=server_id)
     tgt = server_set.salt_name
     port = server_set.port
     app_user = server_set.app_user
-    env_name = server_set.env_name.name
+    env_name = server_set.env_name.name.lower()
     app_name = server_set.app_name.name
     script_url = server_set.app_name.script_url
     zip_package_name = server_set.app_name.zip_package_name
     package_name = server_set.app_name.package_name
     nginx_url = settings.NGINX_URL
 
-    if dep_id != 'Demo':
-        deploypool_set = DeployPool.objects.get(name=dep_id)
+    if deploy_version != 'Demo':
+        deploypool_set = DeployPool.objects.get(name=deploy_version)
         is_inc_tot = deploypool_set.is_inc_tot
-        deploy_version = deploypool_set.name
         deploy_no = deploypool_set.deploy_no
-        do_type = 'deploy'
     else:
         deploypool_set = None
-        do_type = 'operate'
-        deploy_version = 'Demo'
         is_inc_tot = "tot"
         deploy_no = server_set.app_name.op_log_no
 
@@ -81,7 +77,7 @@ def cmd_run(server_id, action, user_name, percent_value,
                "-z {zip_package_name} -p {package_name} -o {port} " \
                "-c {action} -i {is_inc_tot} -u {nginx_url}".format(
                 app_name=app_name,
-                env_name='test',
+                env_name=env_name,
                 deploy_version=deploy_version,
                 zip_package_name=zip_package_name,
                 package_name=package_name,
@@ -96,7 +92,7 @@ def cmd_run(server_id, action, user_name, percent_value,
         result_retcode = result['return'][0][tgt]['retcode']
         result_stderr = result['return'][0][tgt]['stderr']
         result_stdout = result['return'][0][tgt]['stdout'].replace("\r\n", "")
-        print(result_retcode, result_stderr, result_stdout, "@@@@@@@@@@@@@")
+        print(result_retcode, result_stderr, result_stdout, result, "@@@@@@@@@@@@@")
     except:
         return False
     if result_retcode == 0:
@@ -110,12 +106,18 @@ def cmd_run(server_id, action, user_name, percent_value,
                     operation_type=operation_type, operation_no=deploy_no,
                     deploy_version=deploy_version, env_name=env_name,
                     log_content=log_content)
-        add_history(user_name, server_set.app_name, deploypool_set, server_set.env_name, do_type, content)
+        add_history(user_name, server_set.app_name, deploypool_set, server_set.env_name, operation_type, content)
     else:
         change_server(server_id, deploy_version, action, "error")
         change_deploypool(env_name, deploy_version, app_name, action)
         content = {'msg': 'error', 'ip': server_set.ip_address, 'action': action}
-        add_history(user_name, server_set.app_name, deploypool_set, server_set.env_name, do_type, content)
+        log_content = time.strftime("%Y-%m-%d %H:%M:%S",
+                                    time.localtime()) + action + '\n' + tgt + ', error \n' + result
+        post_mablog(app_name=app_name, ip_address=tgt, user_name=str(user_name),
+                    operation_type=operation_type, operation_no=deploy_no,
+                    deploy_version=deploy_version, env_name=env_name,
+                    log_content=log_content)
+        add_history(user_name, server_set.app_name, deploypool_set, server_set.env_name, operation_type, content)
         return False
     time.sleep(2)
     return True
@@ -187,25 +189,15 @@ def change_deploypool(server_env, deploy_version, app_name, action):
         deploypool_set.save()
 
 
-def add_history(user, app_name, deploy_name, env_name, do_type, content):
+def add_history(user, app_name, deploy_name, env_name, operation_type, content):
     rid = uuid.uuid4()
-    if do_type == 'deploy':
-        History.objects.create(
-            name=rid,
-            user=user,
-            app_name=app_name,
-            env_name=env_name,
-            deploy_name=deploy_name,
-            do_type='DEPLOY',
-            content=content
+    History.objects.create(
+        name=rid,
+        user=user,
+        app_name=app_name,
+        env_name=env_name,
+        deploy_name=deploy_name,
+        do_type=operation_type,
+        content=content
     )
-    if do_type == 'operate':
-        History.objects.create(
-            name=rid,
-            user=user,
-            app_name=app_name,
-            env_name=env_name,
-            deploy_name=deploy_name,
-            do_type='OPERATE',
-            content=content
-        )
+

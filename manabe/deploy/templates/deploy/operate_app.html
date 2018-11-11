@@ -2,9 +2,6 @@
 
 {% load staticfiles %}
 {% block title %} 部署服务器列表 {% endblock %}
-{% block ext-css%}
-<style id="antiClickjack">body{display:none !important;}</style>
-{% endblock%}
 
 {% block content %}
 <div>
@@ -129,7 +126,7 @@
 <style>
 #deploylogout{
     padding:10px;
-    background-color:#3399CC;
+    background-color:#0022FF;
     color:#FFFFFF;
     width:820px;
     height:460px;
@@ -153,14 +150,6 @@
 
 {% block script %}
     <script>
-
-
-    if (self === top) {
-    var antiClickjack = document.getElementById("antiClickjack");
-    antiClickjack.parentNode.removeChild(antiClickjack);
-    } else {
-    top.location = self.location;
-    }
     {% include "deploy/deploy.js" %}
     </script>
 {% endblock %}

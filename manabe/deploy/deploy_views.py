@@ -24,12 +24,15 @@ class PublishView(ListView):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
             return DeployPool.objects.filter(
-                Q(name__icontains=search_pk) | Q(description__icontains=search_pk)).exclude(
+                Q(name__icontains=search_pk) |
+                Q(description__icontains=search_pk)).exclude(
                 deploy_status__in=["CREATE", "BUILD"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return DeployPool.objects.filter(app_name=app_name).exclude(deploy_status__name__in=["CREATE", "BUILD"])
-        return DeployPool.objects.exclude(deploy_status__name__in=["CREATE", "BUILD"])
+            return DeployPool.objects.filter(app_name=app_name).\
+                exclude(deploy_status__name__in=["CREATE", "BUILD"])
+        return DeployPool.objects.\
+            exclude(deploy_status__name__in=["CREATE", "BUILD"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -128,12 +131,6 @@ class OperateAppView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        if self.request.GET.get('search_pk'):
-            search_pk = self.request.GET.get('search_pk')
-            return Server.objects.filter(name__icontains=search_pk)
-        if self.request.GET.get('env_name'):
-            env_name = self.kwargs['env_name']
-            return Server.objects.filter(id=env_name)
         return Server.objects.filter(app_name=self.kwargs['app_name'], env_name=self.kwargs['env'])
 
     def get_context_data(self, **kwargs):
@@ -244,17 +241,20 @@ class HistoryView(ListView):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
             return History.objects.filter(
-                Q(app_name__name__icontains=search_pk)).filter(do_type__in=["DEPLOY", "OPERATE"])
+                Q(app_name__name__icontains=search_pk) |
+                Q(content__icontains=search_pk))\
+                .filter(do_type__in=["DEPLOY", "OPERATE"])
         if self.request.GET.get('app_name'):
             app_name = self.request.GET.get('app_name')
-            return History.objects.filter(app_name__name=app_name).filter(do_type__in=["DEPLOY", "OPERATE"])
+            return History.objects.filter(app_name__id=app_name)\
+                .filter(do_type__in=["DEPLOY", "OPERATE"])
         return History.objects.filter(do_type__in=["DEPLOY", "OPERATE"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
         context['current_page'] = "deploy-history"
-        context['current_page_name'] = "发布单列表"
+        context['current_page_name'] = "历史发布单列表"
         query_string = self.request.META.get('QUERY_STRING')
         if 'page' in query_string:
             query_list = query_string.split('&')
