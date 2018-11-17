@@ -8,6 +8,10 @@ from serverinput.models import Server
 from .models import DeployPool, DeployStatus, History
 from public.salt import salt_api_inst
 from public.mablog import post_mablog
+import logging
+
+
+mylog = logging.getLogger('manabe')
 
 
 def deploy(subserver_list, deploy_type, is_restart_server,
@@ -88,6 +92,8 @@ def cmd_run(server_id, action, user_name, percent_value,
     )
     arg = [script_url, arg_args, 'runas='+app_user, 'env={"LC_ALL": ""}']
     result = salt_api_inst().cmd_script(tgt=tgt, arg=arg)
+    mylog.debug("deploy argument is: {}.".format(arg))
+    mylog.debug("deploy result is: {}.".format(result))
     try:
         result_retcode = result['return'][0][tgt]['retcode']
         result_stderr = result['return'][0][tgt]['stderr']

@@ -1,0 +1,15 @@
+{% extends "manabe/template.html" %}
+{% load staticfiles %}
+{% block title %} 查看Token {% endblock %}
+
+{% block content %}
+您的Token:<H2 style="color:red">{{token_str}}</H2>
+此token主要用于第三方应用调用API的认证连接，请妥善保存!<br>
+如果此Token已泄露而不够安全，请点击以下链接重新生成Token，
+ <form action="" method="POST" class="form form-horizontal">
+    {% csrf_token %}
+    <button type="submit"  class="btn btn-primary">生成的新的Token</button>
+ </form>
+
+
+{% endblock %}

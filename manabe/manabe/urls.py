@@ -18,7 +18,9 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from .views import IndexView, user_login, user_register, change_password
+from .views import token, gettoken
 from django.contrib.auth.views import logout_then_login
+from rest_framework.authtoken import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +28,8 @@ urlpatterns = [
     path('accounts/register/', user_register, name='register'),
     path('accounts/login/', user_login, name='login'),
     path('logout/', logout_then_login, name='logout'),
+    path('token/', login_required(token), name="token"),
+    path('gettoken/', login_required(gettoken), name="gettoken"),
     path('donation/', TemplateView.as_view(template_name="manabe/donation.html"), name="donation"),
     path('accounts/change-password/', login_required(change_password), name="change-password"),
 ]
@@ -52,4 +56,10 @@ urlpatterns += [
 
 urlpatterns += [
     path('rightadmin/', include('rightadmin.urls')),
+]
+
+# RESTful api
+urlpatterns += [
+    path('api-token-auth/', views.obtain_auth_token),
+    path('api/', include('api.urls')),
 ]

@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +44,8 @@ INSTALLED_APPS = [
     'deploy.apps.DeployConfig',
     'envx.apps.EnvxConfig',
     'rightadmin.apps.RightadminConfig',
-    'serverinput.apps.ServerinputConfig'
+    'serverinput.apps.ServerinputConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +93,16 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -134,3 +147,47 @@ MABLOG_URL = "http://127.0.0.1:8888"
 JENKINS_URL = "http://192.168.1.112:8088/"
 JENKINS_USERNAME = 'root'
 JENKINS_PASSWORD = 'adminadmin'
+
+
+import os
+import platform
+
+if platform.system() == "Windows":
+    BASE_LOG_DIR = "D:\\tmp\\"
+else:
+    BASE_LOG_DIR = "/tmp/"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(process)d] [%(threadName)s:%(thread)d] '
+                      '[%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] '
+                      '[%(levelname)s]- %(message)s'
+        },
+        'simple': {
+            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+        },
+    },
+    'filters': {
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_LOG_DIR, "manabe_debug.log"),     #日志输出文件
+            'maxBytes': 1024*1024*50,                  #文件大小
+            'backupCount': 5,                         #备份份数
+            'formatter': 'standard',                   #使用哪种formatters日志格式
+            'encoding': 'utf-8',
+        },
+    },
+    'loggers': {
+        'manabe': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}

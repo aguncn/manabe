@@ -1,9 +1,12 @@
 # coding:utf8
 # 首先导入系统库，再导入框架库，最后导入用户库
 import platform
+import os
 import django
+import hashlib
 from django.views.generic.base import TemplateView
 from django.shortcuts import render, HttpResponseRedirect
+from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
@@ -11,6 +14,7 @@ from django.contrib.auth.models import User
 from appinput.models import App
 from serverinput.models import Server
 from deploy.models import DeployPool
+from rest_framework.authtoken.models import Token
 
 from .forms import LoginForm, RegisterForm, ChangepwdForm
 
@@ -118,3 +122,27 @@ def user_register(request):
         form = RegisterForm()
         return render(request, 'manabe/register.html', locals())
 
+
+def gettoken(request):
+    if request.method == 'GET':
+        token_key = dict()
+        token_key["username"] = request.user.username
+        token_key["token"] = Token.objects.get(user=request.user).key
+        return JsonResponse(token_key)
+
+
+def token(request):
+    if request.method == 'POST':
+        token_key = hashlib.sha1(os.urandom(24)).hexdigest()
+        Token.objects.filter(user_id=request.user.id).update(key=token_key)
+        context_dict = {
+            'token_str': token_key
+        }
+        return render(request, 'manabe/token.html', context_dict)
+    else:
+
+        # 获取已有的token
+        context_dict = {
+            'token_str': Token.objects.get(user=request.user).key
+        }
+        return render(request, 'manabe/token.html', context_dict)
