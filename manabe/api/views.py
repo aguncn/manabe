@@ -1,6 +1,6 @@
 # coding=utf8
 from rest_framework import viewsets
-from .serializers import *
+from .serializers import UserSerializer, ServerSerializer, DeployPoolSerializer, AppSerializer
 from .renderer import Utf8JSONRenderer
 from django.contrib.auth.models import User
 from rest_framework import permissions
@@ -27,10 +27,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.AllowAny,)
-    paginate_by = 5
 
 
-class AppViewSet(viewsets.ReadOnlyModelViewSet):
+class AppViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
     """
@@ -182,5 +181,5 @@ class DeployPoolViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         filter_dict = dict()
         current_date = timezone.now()
-        filter_dict['change_date__gt'] = current_date - timedelta(days=30)
+        filter_dict['change_date__gt'] = current_date - timedelta(days=365)
         return DeployPool.objects.filter(**filter_dict)

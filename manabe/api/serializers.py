@@ -7,7 +7,8 @@ from deploy.models import DeployPool
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    deploy_create_user = serializers.HyperlinkedRelatedField(many=True, view_name='deploypool-detail', read_only=True)
+    deploy_create_user = serializers.HyperlinkedRelatedField(many=True,
+                                                             view_name='api:deploypool-detail', read_only=True)
 
     class Meta:
         model = User
@@ -28,11 +29,12 @@ class DeployPoolSerializer(serializers.ModelSerializer):
     create_user = serializers.ReadOnlyField(source='create_user.username')
     app_name = serializers.ReadOnlyField(source='app_name.name')
     is_restart_status = serializers.ReadOnlyField(source='app_name.is_restart_status')
+    deploy_status = serializers.ReadOnlyField(source='deploy_status.description')
 
     class Meta:
         model = DeployPool
         fields = ('id', 'name', 'app_name', 'is_inc_tot', 'create_user',
-                  'deploy_type', 'is_restart_status', 'change_date' )
+                  'deploy_type', 'is_restart_status', 'deploy_status', 'change_date')
 
 
 class AppSerializer(serializers.HyperlinkedModelSerializer):
