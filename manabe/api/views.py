@@ -37,44 +37,76 @@ class AppViewSet(viewsets.ModelViewSet):
     serializer_class = AppSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.AllowAny,)
-    paginate_by = 100
 
     # 如有需要，自定义update和create方法，以实现外键方面的关联
     def create(self, request, *args, **kwargs):
+        try:
+            aa = TokenAuthentication()
+            user_name, token = aa.authenticate(request)
+            print(user_name, token)
+        except Exception as e:
+            print(e)
+            result = {'return': 'fail', 'message': "auth fail."}
+            return Response(result, status=403)
+        if user_name != request.user:
+            result = {'return': 'fail', 'message': "others token."}
+            return Response(result, status=403)
         validated_data = dict()
         validated_data['name'] = request.data['name']
+        validated_data['jenkins_job'] = request.data['jenkins_job']
+        validated_data['git_url'] = request.data['git_url']
+        validated_data['script_url'] = request.data['script_url']
         validated_data['create_user'] = request.user
 
         try:
-            Server.objects.create(**validated_data)
+            App.objects.create(**validated_data)
             response_data = {
                 'result': 'success',
-                'message': u'新服务器插入数据库成功！'
+                'message': u'新App服务应用插入数据库成功！'
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
         except:
             response_data = {
                 'result': 'failed',
-                'message': u'不能正确插入数据库'
+                'message': u'App服务应用不能正确插入数据库'
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
-        name = request.data['name']
+        try:
+            aa = TokenAuthentication()
+            user_name, token = aa.authenticate(request)
+            print(user_name, token)
+        except Exception as e:
+            print(e)
+            result = {'return': 'fail', 'message': "auth fail."}
+            return Response(result, status=403)
+        if user_name != request.user:
+            result = {'return': 'fail', 'message': "others token."}
+            return Response(result, status=403)
+        validated_data = dict()
+        validated_data['name'] = request.data['name']
+        validated_data['jenkins_job'] = request.data['jenkins_job']
+        validated_data['git_url'] = request.data['git_url']
+        validated_data['script_url'] = request.data['script_url']
+        validated_data['create_user'] = request.user
+
+        pk_id = kwargs["pk"]
         try:
 
-            DeployPool.objects.filter(name=name).update(order_no=order_no, version_name=None)
+            app_item = App.objects.filter(pk=pk_id)
+            app_item.update(**validated_data)
             response_data = {
                 'result': 'success',
-                'name': name,
+                'name': pk_id,
                 'create_user': request.user.username,
-                'message': u'更新发布单成功！'
+                'message': u'更新App服务应用成功！'
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
         except:
             response_data = {
                 'result': 'failed',
-                'message': u'更新发布单失败！'
+                'message': u'更新App服务应用失败！'
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -157,14 +189,14 @@ class ServerViewSet(viewsets.ModelViewSet):
                 'result': 'success',
                 'name': pk_id,
                 'create_user': request.user.username,
-                'message': u'更新发布单成功！'
+                'message': u'更新服务器成功！'
             }
 
             return Response(response_data, status=status.HTTP_201_CREATED)
         except:
             response_data = {
                 'result': 'failed',
-                'message': u'更新发布单失败！'
+                'message': u'更新服务器失败！'
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
