@@ -1,7 +1,6 @@
-
 import requests
 import json
-
+'''
 headers = {'Content-Type': 'application/json;charset=utf-8'}
 payload = {'username': "ccc",
            'password': "ccc"}
@@ -11,3 +10,4 @@ print(ret.content)
 
 print('ok')
 
+'''
