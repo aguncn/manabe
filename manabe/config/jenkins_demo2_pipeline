@@ -1,0 +1,45 @@
+pipeline {
+    agent {
+        node { label "master" }
+    }
+    stages {
+        stage('Prepare Git Code') {
+            steps {
+                echo "Preparing begin.."
+                sh "rm -rf ${WORKSPACE}/*"
+                git branch: '${branch_build}', 
+                credentialsId: 'gitlab_jenkins',  
+                url: '${git_url}'
+                echo 'Preparing end..'
+            }
+        }
+        stage("Build") {
+            steps {
+                dir("${WORKSPACE}/${dir_build_file}") {
+                    echo "Build begin.."
+                    sh "/usr/local/maven/bin/mvn package -Dmaven.test.skip=true"
+                    sh "cp target/${package_name} ./"
+                    sh "tar -zcvf ${zip_package_name} ${package_name} config/"
+                    echo 'Build end..'
+                }
+            }
+        }
+        stage("scp package to nginx") {
+            steps {
+                dir("${WORKSPACE}/${dir_build_file}") {
+                    echo "scp nginx  begin.."
+                    sshagent(credentials: ['nginx_root_rsa']) {
+                        sh "ssh root@192.168.1.111 
+mkdir -p /usr/share/nginx/html
+/${app_name}/${deploy_version}/"
+                        sh "scp ${zip_package_name}
+ root@192.168.1.111:/usr/share/nginx/html
+/${app_name}/${deploy_version}/"
+                    }
+                    
+                    echo 'scp nginx  end..'
+                }
+            }
+        }
+    }
+}
