@@ -35,8 +35,6 @@ urlpatterns += [
          name='deploy_count'),
     path('app_deploy_count/', AppDeployCountView.as_view(),
          name='app_deploy_count'),
-
-
 ]
 
 # upload

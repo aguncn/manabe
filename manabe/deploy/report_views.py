@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.http import JsonResponse
-from  django.views.generic.base  import  TemplateView
+from  django.views.generic.base  import TemplateView
 from deploy.models import DeployPool
 from envx.models import Env
 from django.db.models import Count
