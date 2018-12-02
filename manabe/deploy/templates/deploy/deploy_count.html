@@ -1,0 +1,41 @@
+{% extends "manabe/template.html" %}
+
+{% load staticfiles %}
+{% block title %} 发布数据 {% endblock %}
+
+{% block content %}
+<table class="table table-border table-bordered table-bg">
+    <thead>
+        <tr>
+            <th scope="col" colspan="7">PRD发布图表</th>
+        </tr>
+    <tbody>
+        <tr class="text-c">
+            <td>
+                <div id="main_prd" style="height:200px;"></div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+<table class="table table-border table-bordered table-bg">
+    <thead>
+        <tr>
+            <th scope="col" colspan="7">TEST发布图表</th>
+        </tr>
+    <tbody>
+        <tr class="text-c">
+            <td>
+                <div id="main_test" style="height:200px;"></div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+{% endblock %}
+{% block ext-jss %}
+<script type="text/javascript" src="{% static 'lib/echarts/echarts.min.js'%}"></script>
+<script type="text/javascript">
+{% include "deploy/report.js" %}
+</script>
+{% endblock %}

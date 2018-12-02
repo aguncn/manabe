@@ -45,8 +45,8 @@
 			<dt><i class="Hui-iconfont">&#xe61e;</i> 统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a href="member-list.html" >发布数据</a></li>
-					<li><a href="member-del.html">用户统计</a></li>
+					<li><a href="{% url 'deploy:deploy_count' %}">发布数据</a></li>
+					<li><a href="{% url 'deploy:app_deploy_count' %}">应用统计</a></li>
 				</ul>
 			</dd>
 		</dl>

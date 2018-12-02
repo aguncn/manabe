@@ -10,7 +10,9 @@
         </tr>
     <tbody>
         <tr class="text-c">
-            <td><img src="{% static 'img/hcharts_demo.png' %}" height="200" width="100%"></td>
+            <td>
+                <div id="main" style="height:200px;"></div>
+            </td>
         </tr>
     </tbody>
 </table>
@@ -82,5 +84,11 @@
 </table>
 <br/>
 
+{% endblock %}
+{% block ext-jss %}
+<script type="text/javascript" src="{% static 'lib/echarts/echarts.min.js'%}"></script>
+<script type="text/javascript">
+{% include "manabe/manabe.js" %}
+</script>
 {% endblock %}
 

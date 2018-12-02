@@ -82,23 +82,23 @@ WSGI_APPLICATION = 'manabe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 #DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'manabe',
-#        'HOST': 'localhost',
-#        'PORT': '3306',
-#        'USER': 'root',
-#        'PASSWORD': 'password',
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #    }
 #}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'manabe',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'USER': 'root',
+        'PASSWORD': 'password',
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

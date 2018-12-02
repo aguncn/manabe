@@ -5,6 +5,8 @@ from .views import DeployCreateView, DeployUpdateView, DeployDetailView, DeployL
 from .views import jenkins_build, jenkins_status, update_deploypool_jenkins
 from .deploy_views import PublishView, DeployView, OperateView, OperateAppView, HistoryView, deploy_cmd
 from .upload_views import DeployVersionUploadView, fileupload
+from .report_views import get_app_deploy_count, get_deploy_count
+from .report_views import DeployCountView, AppDeployCountView
 
 app_name = 'deploy'
 
@@ -21,6 +23,20 @@ urlpatterns = [
     path('jenkins_status/', jenkins_status, name='jenkins_status'),
     path('update_deploypool_jenkins/', update_deploypool_jenkins,
          name='update_deploypool_jenkins'),
+]
+
+# report
+urlpatterns += [
+    path('get_deploy_count/', get_deploy_count,
+         name='get_deploy_count'),
+    path('get_app_deploy_count/', get_app_deploy_count,
+         name='get_app_deploy_count'),
+    path('deploy_count/', DeployCountView.as_view(),
+         name='deploy_count'),
+    path('app_deploy_count/', AppDeployCountView.as_view(),
+         name='app_deploy_count'),
+
+
 ]
 
 # upload
