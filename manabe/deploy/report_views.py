@@ -45,7 +45,6 @@ def get_app_deploy_count(request):
         values('app_name__name'). \
         distinct(). \
         annotate(number=Count('app_name')).order_by('-number')[:10]
-    print(app_deploy_qs)
     for item in app_deploy_qs:
         item_dict = {}
         item_key = item['app_name__name']

@@ -1,12 +1,12 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import App
+from model_mommy import mommy
+from appinput.models import App
 from serverinput.models import Server
 from envx.models import Env
-# Create your tests here.
 
 
-class ModelTest(TestCase):
+class ServerInputModelTest(TestCase):
 
     def setUp(self):
         manage_user = User.objects.create_user(username='Samantha', password="password")
@@ -33,25 +33,16 @@ class ModelTest(TestCase):
                                             op_user=manage_user,
                                             )
 
-    def test_env_models(self):
-        result = Env.objects.get(id=1)
-        self.assertEqual(result.eid, 1)
-        self.assertEqual(result.name, "TEST")
-
-    def test_app_models(self):
-        result = App.objects.get(id=1)
-        self.assertEqual(result.jenkins_job, "test_jenkins_job")
-        self.assertEqual(result.git_url, "http://tese_git_url/")
-        self.assertEqual(result.build_cmd, "mvn package")
-        self.assertEqual(result.op_log_no, 88)
-
     def test_server_models(self):
         result = Server.objects.get(id=1)
-        user = User.objects.get(id=1)
-        app = App.objects.get(id=1)
-        env = Env.objects.get(id=1)
         self.assertEqual(result.salt_name, "192.168.1.1_8080")
         self.assertEqual(result.app_user, "root")
-        self.assertEqual(result.app_name, app)
-        self.assertEqual(result.env_name, env)
-        self.assertEqual(result.op_user, user)
+
+
+class ServerInputModelTestMommy(TestCase):
+    def setUp(self):
+        self.new_server = mommy.make(Server)
+
+    def test_server_creation_mommy(self):
+        self.assertTrue(isinstance(self.new_server, Server))
+        self.assertEqual(self.new_server.__str__(), self.new_server.name)

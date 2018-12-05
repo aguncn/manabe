@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve, reverse
 
-from .urls import ServerInputListView, ServerInputCreateView
+from serverinput.urls import ServerInputListView, ServerInputCreateView
 
 
 class UrlTests(TestCase):
