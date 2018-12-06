@@ -7,20 +7,20 @@ from appinput.models import App
 class AppInputModelTest(TestCase):
     def setUp(self):
         manage_user = User.objects.create_user(username='Samantha', password="password")
-        app_item = App.objects.create(name="ABC-BACKEND-JAVA",
-                                      jenkins_job="test_jenkins_job",
-                                      git_url="http://tese_git_url/",
-                                      dir_build_file="test_project/",
-                                      build_cmd="mvn package",
-                                      is_restart_status=True,
-                                      package_name="package_name.war",
-                                      zip_package_name="zip_package_name.zip",
-                                      op_log_no=88,
-                                      manage_user=manage_user,
-                                      script_url="http://nginx/script_url/test.sh",)
+        self.app_item = App.objects.create(name="ABC-BACKEND-JAVA",
+                                           jenkins_job="test_jenkins_job",
+                                           git_url="http://tese_git_url/",
+                                           dir_build_file="test_project/",
+                                           build_cmd="mvn package",
+                                           is_restart_status=True,
+                                           package_name="package_name.war",
+                                           zip_package_name="zip_package_name.zip",
+                                           op_log_no=88,
+                                           manage_user=manage_user,
+                                           script_url="http://nginx/script_url/test.sh",)
 
     def test_app_models(self):
-        result = App.objects.get(id=1)
+        result = App.objects.get(id=self.app_item.id)
         self.assertEqual(result.name, "ABC-BACKEND-JAVA")
 
 
