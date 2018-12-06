@@ -26,7 +26,6 @@ class DeployStatus(CommonInfo):
 
 class DeployPool(CommonInfo):
     name = models.CharField(max_length=100,
-                            blank=True, null=True,
                             verbose_name="发布单编号")
     description = models.CharField(max_length=1024,
                                    blank=True,
