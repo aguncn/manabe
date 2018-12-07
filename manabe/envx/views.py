@@ -103,6 +103,8 @@ def change(request):
             content = {'before': org_env_name, 'after': env_name.name}
             add_history(user, app_name, deploy_item, content)
             return redirect('envx:list')
+    else:
+        return redirect('envx:list')
 
 
 def add_history(user, app_name, deploy_name, content):

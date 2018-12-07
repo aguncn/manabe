@@ -91,9 +91,10 @@ def cmd_run(server_id, action, user_name, percent_value,
                 nginx_url=nginx_url
     )
     arg = [script_url, arg_args, 'runas='+app_user, 'env={"LC_ALL": ""}']
-    result = salt_api_inst().cmd_script(tgt=tgt, arg=arg)
+    result = salt_run(tgt=tgt, arg=arg)
     mylog.debug("deploy argument is: {}.".format(arg))
     mylog.debug("deploy result is: {}.".format(result))
+
     try:
         result_retcode = result['return'][0][tgt]['retcode']
         result_stderr = result['return'][0][tgt]['stderr']
@@ -128,6 +129,9 @@ def cmd_run(server_id, action, user_name, percent_value,
     time.sleep(2)
     return True
 
+
+def salt_run(tgt=None, arg=None):
+    return salt_api_inst().cmd_script(tgt=tgt, arg=arg)
 
 # server的deploy_status用于记录在哪一个发布步骤出错，或是全部成功
 # deploypool的deploy_status用于发布单的周期状态，
