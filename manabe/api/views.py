@@ -56,7 +56,7 @@ class AppViewSet(viewsets.ModelViewSet):
         validated_data['jenkins_job'] = request.data['jenkins_job']
         validated_data['git_url'] = request.data['git_url']
         validated_data['script_url'] = request.data['script_url']
-        validated_data['create_user'] = request.user
+        validated_data['manage_user'] = request.user
 
         try:
             App.objects.create(**validated_data)
@@ -65,7 +65,8 @@ class AppViewSet(viewsets.ModelViewSet):
                 'message': u'新App服务应用插入数据库成功！'
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
-        except:
+        except Exception as e:
+            print(e, "$$$$$$$$$$$$$$$$$$")
             response_data = {
                 'result': 'failed',
                 'message': u'App服务应用不能正确插入数据库'

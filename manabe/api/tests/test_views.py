@@ -3,6 +3,8 @@ from django.urls import resolve, reverse
 from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APIClient
+from rest_framework import status
+from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from api.views import UserViewSet
 from api.views import AppViewSet
@@ -40,6 +42,35 @@ class AppListTests(TestCase):
     def test_app_list_url_resolves_app_view(self):
         view = resolve('/api/apps/')
         self.assertEqual(view.func.__name__, AppViewSet.as_view(({'get': 'list'})).__name__)
+
+
+class AppCreateTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='test',
+            email='test@example.com',
+            password='test', )
+        token = Token.objects.get(user__username='test')
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+
+    def test_create_app(self):
+        """
+        Ensure we can create a new app object.
+        """
+        url = reverse('api:app-list')
+        payload = {'name': "ZEP-BACKEND-JAVA",
+                   'jenkins_job': "jenkins_job",
+                   'git_url': "http://test/",
+                   'dir_build_file': "./target/",
+                   'build_cmd': "mvn packaget",
+                   'script_url': "http://test/script.sh"
+                   }
+        response = self.client.post(url, payload, format='json')
+        print(response, "@@@@@@@@@")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(App.objects.count(), 1)
+        self.assertEqual(App.objects.get().name, 'ZEP-BACKEND-JAVA')
 
 
 class ServerCreateTests(TestCase):
