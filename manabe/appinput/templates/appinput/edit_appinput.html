@@ -6,7 +6,8 @@
 <form action="" method="post" class="form form-horizontal" id="demoform-1">
     {% csrf_token %}
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.name }}
             {% for error in form.name.errors %}
@@ -15,7 +16,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.description.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.description.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.description }}
             {% for error in form.description.errors %}
@@ -24,7 +26,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.jenkins_job.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.jenkins_job.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.jenkins_job }}
             {% for error in form.jenkins_job.errors %}
@@ -33,7 +36,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.git_url.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.git_url.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.git_url }}
             {% for error in form.git_url.errors %}
@@ -42,7 +46,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.dir_build_file.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.dir_build_file.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.dir_build_file }}
             {% for error in form.dir_build_file.errors %}
@@ -51,7 +56,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.build_cmd.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.build_cmd.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.build_cmd }}
             {% for error in form.build_cmd.errors %}
@@ -60,7 +66,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.package_name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.package_name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.package_name }}
             {% for error in form.package_name.errors %}
@@ -69,7 +76,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.zip_package_name.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.zip_package_name.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.zip_package_name }}
             {% for error in form.zip_package_name.errors %}
@@ -79,7 +87,8 @@
     </div>
 
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.is_restart_status.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.is_restart_status.label_tag }}：</label>
         <div class="formControls skin-minimal col-xs-8 col-sm-9">
             {{ form.is_restart_status }}
             {% for error in form.is_restart_status.errors %}
@@ -88,7 +97,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.manage_user.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.manage_user.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.manage_user }}
             {% for error in form.manage_user.errors %}
@@ -97,7 +107,8 @@
         </div>
     </div>
     <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-3">{{ form.script_url.label_tag }}：</label>
+        <label class="form-label col-xs-4 col-sm-3">
+            {{ form.script_url.label_tag }}：</label>
         <div class="formControls col-xs-8 col-sm-9">
             {{ form.script_url }}
             {% for error in form.script_url.errors %}

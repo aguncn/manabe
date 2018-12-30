@@ -7,7 +7,8 @@
 <div>
     <span class="l">
         {% if is_admin_group %}
-            <a class="btn btn-primary radius"  href="{% url 'appinput:create' %}">
+            <a class="btn btn-primary radius"
+               href="{% url 'appinput:create' %}">
                 新建App应用
             </a>
         {% endif %}
@@ -50,7 +51,8 @@
     {% for item in object_list %}
     <tr class="text-l">
         <td>
-            <span data-toggle="tooltip" data-placement="bottom" title="{{item.description}}">
+            <span data-toggle="tooltip" data-placement="bottom"
+                  title="{{item.description}}">
                 <a href="{% url 'appinput:detail' pk=item.id %}">
                     {{item.name}}
                 </a>
@@ -119,15 +121,18 @@
 <div class="text-r">
     <ul>
         {% if page_obj.has_previous %}
-           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}"
+              class="btn btn-primary-outline radius">上一页</a></li>
         {% else %}
            <a href="" class="btn btn-primary-outline radius">上一页</a></li>
         {% endif %}
         <a href="#" >
-            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+            <span class="label label-primary radius">
+                {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
         </a>
         {% if page_obj.has_next %}
-         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}"
+            class="btn btn-primary-outline radius">下一页</a></li>
         {% else %}
            <a href="" class="btn btn-primary-outline radius">下一页</a></li>
         {% endif %}

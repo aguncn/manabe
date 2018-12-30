@@ -7,12 +7,16 @@
         {name: "应用名称：{{ app.name }}", open:true, children: [
             {%for single_action in action %}
                 {% ifnotequal single_action.name 'DEPLOY'%}
-                    {name: "{{single_action.description}}", url:"{% url 'rightadmin:admin_user' app_id=app.id action_id=single_action.id env_id=0 %}", target:"myFrame"},
+                    {name: "{{single_action.description}}",
+                    url:"{% url 'rightadmin:admin_user' app_id=app.id action_id=single_action.id env_id=0 %}",
+                    target:"myFrame"},
                 {% endifnotequal %}
                 {% ifequal single_action.name 'DEPLOY'%}
                     {name: "{{single_action.description}}", open:true, children: [
                         {%for single_env in env %}
-                        {name: "{{ single_env }}环境", url:"{% url 'rightadmin:admin_user' app_id=app.id action_id=single_action.id env_id=single_env.id %} ", target:"myFrame"},
+                        {name: "{{ single_env }}环境",
+                        url:"{% url 'rightadmin:admin_user' app_id=app.id action_id=single_action.id env_id=single_env.id %} ",
+                        target:"myFrame"},
                         {% endfor %}
                     ]},
                 {% endifequal %}

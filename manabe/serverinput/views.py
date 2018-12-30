@@ -1,10 +1,12 @@
 # coding=utf8
 
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import ListView, \
+    CreateView, DetailView, UpdateView
 from django.utils import timezone
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, \
+    HttpResponse
 from .forms import ServerForm
 from .models import Server
 from public.user_group import is_admin_group

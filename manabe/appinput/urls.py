@@ -1,7 +1,10 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 
-from .views import AppInputCreateView, AppInputUpdateView, AppInputDetailView, AppInputListView
+from .views import AppInputCreateView, \
+    AppInputUpdateView, \
+    AppInputDetailView, \
+    AppInputListView
 
 app_name = 'appinput'
 

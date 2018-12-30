@@ -58,7 +58,9 @@ class AppInputListView(ListView):
     def get_queryset(self):
         if self.request.GET.get('search_pk'):
             search_pk = self.request.GET.get('search_pk')
-            return App.objects.filter(Q(name__icontains=search_pk) | Q(package_name__icontains=search_pk))
+            return App.objects.filter(
+                Q(name__icontains=search_pk) |
+                Q(package_name__icontains=search_pk))
         return App.objects.all()
 
     def get_context_data(self, **kwargs):
