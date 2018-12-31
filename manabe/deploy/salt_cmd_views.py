@@ -55,6 +55,7 @@ def deploy(subserver_list, deploy_type, is_restart_server,
     return True
 
 
+# cmd_run函数是在每一个线程当中运行的
 def cmd_run(server_id, action, user_name, percent_value,
             deploy_version=None, operation_type=None):
     server_set = Server.objects.get(id=server_id)
@@ -130,13 +131,14 @@ def cmd_run(server_id, action, user_name, percent_value,
     return True
 
 
+# 独立出这个函数，方便后续mock测试
 def salt_run(tgt=None, arg=None):
     return salt_api_inst().cmd_script(tgt=tgt, arg=arg)
 
+
 # server的deploy_status用于记录在哪一个发布步骤出错，或是全部成功
 # deploypool的deploy_status用于发布单的周期状态，
-# #创建，编译，准备好发布，发布中，发布出错，完成等状态(它不包括环境信息)。
-# 后者的状态依赖于前者状态的成功。后者已独立出一个表来进行管理。
+# 创建，编译，准备好发布，发布中，发布出错，完成等状态(它不包括环境信息)。
 def change_server(server_id, deploy_version, action, result):
     server_set = Server.objects.get(id=server_id)
     server_set.deploy_status = "{}:{}".format(action, result)

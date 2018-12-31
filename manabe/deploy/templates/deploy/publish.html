@@ -85,15 +85,18 @@
 <div class="text-r">
     <ul>
         {% if page_obj.has_previous %}
-           <a href="{{current_url}}page={{ page_obj.previous_page_number }}" class="btn btn-primary-outline radius">上一页</a></li>
+           <a href="{{current_url}}page={{ page_obj.previous_page_number }}"
+              class="btn btn-primary-outline radius">上一页</a></li>
         {% else %}
            <a href="" class="btn btn-primary-outline radius">上一页</a></li>
         {% endif %}
         <a href="#" >
-            <span class="label label-primary radius">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+            <span class="label label-primary radius">
+                {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
         </a>
         {% if page_obj.has_next %}
-         <a href="{{current_url}}page={{ page_obj.next_page_number }}" class="btn btn-primary-outline radius">下一页</a></li>
+         <a href="{{current_url}}page={{ page_obj.next_page_number }}"
+            class="btn btn-primary-outline radius">下一页</a></li>
         {% else %}
            <a href="" class="btn btn-primary-outline radius">下一页</a></li>
         {% endif %}

@@ -11,7 +11,9 @@ from serverinput.models import Server
 from envx.models import Env
 from appinput.models import App
 from rightadmin.models import Action
-from public.user_group import is_right, get_app_admin, is_admin_group
+from public.user_group import is_right, \
+    get_app_admin, \
+    is_admin_group
 
 from .salt_cmd_views import deploy
 
@@ -221,6 +223,7 @@ def deploy_cmd(request):
     return JsonResponse(result, status=200)
 
 
+# 将传递过来的列表，按指定批次，返回分组列表
 def mod_group(alist, agroup):
     tmp_list = [0] * agroup
     for i in range(len(alist)):
