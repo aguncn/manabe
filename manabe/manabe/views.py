@@ -1,9 +1,7 @@
 # coding:utf8
 # 首先导入系统库，再导入框架库，最后导入用户库
 import platform
-import os
 import django
-import hashlib
 from django.views.generic.base import TemplateView
 from django.shortcuts import render, HttpResponseRedirect
 from django.http import JsonResponse
@@ -16,7 +14,7 @@ from serverinput.models import Server
 from deploy.models import DeployPool
 from rest_framework.authtoken.models import Token
 
-from .forms import LoginForm, RegisterForm, ChangepwdForm
+from .forms import LoginForm, RegisterForm
 
 
 class IndexView(TemplateView):
@@ -48,6 +46,10 @@ def user_login(request):
     error = []
     if request.method == 'POST':
         form = LoginForm(request.POST)
+        vc = request.POST['vc']
+        if vc.upper() != request.session['verify_code']:
+            error.append('验证码错误！')
+            return render(request, "accounts/login.html", locals())
         if form.is_valid():
             data = form.cleaned_data
             username = data['username']
@@ -58,37 +60,12 @@ def user_login(request):
                 return redirect_login(request)
             else:
                 error.append('请输入正确的用户名和密码')
-                return render(request, "manabe/login.html", locals())
+                return render(request, "accounts/login.html", locals())
         else:
-            return render(request, "manabe/login.html", locals())
+            return render(request, "accounts/login.html", locals())
     else:
         form = LoginForm()
-        return render(request, "manabe/login.html", locals())
-
-
-@require_http_methods(["GET", "POST"])
-def change_password(request):
-    if request.method == 'GET':
-        form = ChangepwdForm()
-        return render(request, 'manabe/change-password.html', {'form': form, 'current_page_name': '更改密码'})
-    else:
-        error = []
-        form = ChangepwdForm(request.POST)
-        if form.is_valid():
-            username = request.user.username
-            oldpassword = request.POST.get('oldpassword', '')
-            user = authenticate(username=username, password=oldpassword)
-            if user is not None and user.is_active:
-                newpassword1 = request.POST.get('newpassword1', '')
-                user.set_password(newpassword1)
-                user.save()
-                return render(request, 'manabe/change-password.html', {'changepwd_success': True, })
-            else:
-                error.append('原密码输入错误，请重新输入')
-                return render(request, 'manabe/change-password.html', locals())
-        else:
-            error.append('两次新密码不匹配，请重新输入')
-            return render(request, 'manabe/change-password.html', locals())
+        return render(request, "accounts/login.html", locals())
 
 
 @require_http_methods(["GET", "POST"])
@@ -99,11 +76,14 @@ def user_register(request):
         if form.is_valid():
             data = form.cleaned_data
             username = data['username']
+            email = data['email']
             password = data['password']
             password2 = data['password2']
             if not User.objects.all().filter(username__iexact=username):
                 if form.pwd_validate(password, password2):
-                    user = User.objects.create_user(username=username, password=password, email=None)
+                    user = User.objects.create_user(username=username,
+                                                    password=password,
+                                                    email=email)
                     user.save()
                     user = authenticate(username=username, password=password)
                     login(request, user)
@@ -111,16 +91,16 @@ def user_register(request):
                 else:
 
                     error.append('密码不一致，请确认')
-                    return render(request, 'manabe/register.html', locals())
+                    return render(request, 'accounts/register.html', locals())
             else:
                 error.append('已存在相同用户名，请更换用户名')
-                return render(request, 'manabe/register.html', locals())
+                return render(request, 'accounts/register.html', locals())
         else:
                 error.append('请确认各个输入框无误')
-                return render(request, 'manabe/register.html', locals())
+                return render(request, 'accounts/register.html', locals())
     else:
         form = RegisterForm()
-        return render(request, 'manabe/register.html', locals())
+        return render(request, 'accounts/register.html', locals())
 
 
 def gettoken(request):
@@ -131,18 +111,3 @@ def gettoken(request):
         return JsonResponse(token_key)
 
 
-def token(request):
-    if request.method == 'POST':
-        token_key = hashlib.sha1(os.urandom(24)).hexdigest()
-        Token.objects.filter(user_id=request.user.id).update(key=token_key)
-        context_dict = {
-            'token_str': token_key
-        }
-        return render(request, 'manabe/token.html', context_dict)
-    else:
-
-        # 获取已有的token
-        context_dict = {
-            'token_str': Token.objects.get(user=request.user).key
-        }
-        return render(request, 'manabe/token.html', context_dict)

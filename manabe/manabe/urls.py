@@ -17,8 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
-from .views import IndexView, user_login, user_register, change_password
-from .views import token, gettoken
+from django.contrib.auth import views as auth_views
+from .views import IndexView, user_login, user_register
+from .views import gettoken
+from public.verifycode import verify_code
+from .password_views import change_token,change_email
+from .password_views import change_password
 from django.contrib.auth.views import logout_then_login
 from rest_framework.authtoken import views
 
@@ -28,10 +32,41 @@ urlpatterns = [
     path('accounts/register/', user_register, name='register'),
     path('accounts/login/', user_login, name='login'),
     path('logout/', logout_then_login, name='logout'),
-    path('token/', login_required(token), name="token"),
+    path('verify_code/', verify_code, name='verify_code'),
     path('gettoken/', login_required(gettoken), name="gettoken"),
     path('donation/', TemplateView.as_view(template_name="manabe/donation.html"), name="donation"),
-    path('accounts/change-password/', login_required(change_password), name="change-password"),
+
+]
+
+urlpatterns += [
+    path('change_token/',
+         login_required(change_token),
+         name="change_token"),
+    path('accounts/change_email/',
+         login_required(change_email),
+         name="change_email"),
+    path('accounts/change_password/',
+         login_required(change_password),
+         name="change_password"),
+    path('reset/',
+         auth_views.PasswordResetView.as_view(
+             template_name='accounts/password_reset.html',
+             email_template_name='accounts/password_reset_email.html',
+             subject_template_name='accounts/password_reset_subject.txt'
+         ),
+         name='password_reset'),
+    path('reset/done/',
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='accounts/password_reset_done.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name='accounts/password_reset_confirm.html'),
+         name='password_reset_confirm'),
+    path('reset/complete/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='accounts/password_reset_complete.html'),
+         name='password_reset_complete'),
 ]
 
 urlpatterns += [

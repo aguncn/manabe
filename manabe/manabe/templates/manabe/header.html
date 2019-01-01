@@ -24,8 +24,9 @@
 					<li>{{ user.last_name }}{{ user.first_name }}</li>
 					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">{{ user }}<i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="{% url 'change-password' %}">更改密码</a></li>
-							<li><a href="{% url 'token' %}">查看Token</a></li>
+							<li><a href="{% url 'change_password' %}">更改密码</a></li>
+							<li><a href="{% url 'change_email' %}">更改邮箱</a></li>
+							<li><a href="{% url 'change_token' %}">查看Token</a></li>
 							<li><a href="{% url 'logout' %}">退出</a></li>
 						</ul>
 					</li>

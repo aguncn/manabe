@@ -1,0 +1,38 @@
+{% extends "manabe/template.html" %}
+{% load staticfiles %}
+{% block title %} 更改密码 {% endblock %}
+
+{% block content %}
+
+当前邮箱：{{email}}
+{% if change_email_success %}
+    <div class="Huialert Huialert-success">
+        <i class="Hui-iconfont">&#xe6a6;</i>已成功更新邮箱！
+    </div>
+{% endif %}
+
+<form class="form form-horizontal" action="" method="post">
+    {% csrf_token %}
+    <div class="row cl">
+        <div class="formControls col-xs-8">
+            {{ form.new_email1 }}
+        </div>
+    </div>
+
+    <div class="row cl">
+        <div class="formControls col-xs-8">
+             {{ form.new_email2 }}
+        </div>
+    </div>
+    <div class="row cl text-l">
+        {% for item in error %}
+            <p style="color:red;" class="text-l">{{item}}</p>
+        {% endfor %}
+        <div class="formControls">
+            <input type="submit" class="btn btn-success radius size-L" value="更改邮箱" />
+        </div>
+    </div>
+</form>
+
+{% endblock %}
+

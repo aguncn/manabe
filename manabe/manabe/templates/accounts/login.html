@@ -1,0 +1,64 @@
+﻿{% extends "accounts/template.html" %}
+{% load staticfiles %}
+{% block title %} Manabe-登陆 {% endblock %}
+
+{% block css %}
+<style type="text/css">
+.Hui-iconfont {
+	font-size: 18px;
+	color: #f00;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<form class="form form-horizontal" action="" method="post">
+	{% csrf_token %}
+	<div class="row cl">
+		<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+		<div class="formControls col-xs-8">
+			{{ form.username }}
+		</div>
+	</div>
+
+	<div class="row cl">
+		<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
+		<div class="formControls col-xs-8">
+			 {{ form.password }}
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-3"></label>
+		<div class="formControls col-xs-2">
+			  <input type="text" name="vc" placeholder="验证码" rows="1" class="input-text size-L" required id="id_vc">
+		</div>
+		<div class="formControls col-xs-5">
+			 <img id='verify_code' src="{% url 'verify_code' %}?1" alt="CheckCode"/>
+			<span id='verify_codeChange'>
+				<i class="icon Hui-iconfont">&#xe68f;</i>
+			</span>
+		</div>
+	</div>
+	<div class="row cl text-c">
+		{% for item in error %}
+			<p style="color:red;" class="text-c">{{item}}</p>
+		{% endfor %}
+		<div class="formControls">
+			<input type="submit" name="login" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;" />
+			<a href="{% url 'password_reset' %}"><span class="btn btn-primary-outline radius size-L">忘记密码</span></a>
+			<a href="{% url 'register' %}"><span class="btn btn-primary-outline radius size-L">注册帐号</span></a>
+		</div>
+	</div>
+</form>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    $(function(){
+        $('#verify_codeChange').css('cursor','pointer').click(function() {
+            $('#verify_code').attr('src',$('#verify_code').attr('src')+1)
+        });
+    });
+</script>
+{% endblock %}
