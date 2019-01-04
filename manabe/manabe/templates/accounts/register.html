@@ -33,7 +33,7 @@
 	</div>
 	<div class="row cl text-c">
 		{% for item in error %}
-			<p style="color:red;">{{item}}</p>
+			<font style="color:red;">{{item}}</font>
 		{% endfor %}
 		<div class="formControls">
 			<input type="hidden" name="next" value="{{ request.GET.next }}">

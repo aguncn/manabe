@@ -19,7 +19,6 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from .views import IndexView, user_login, user_register
-from .views import gettoken
 from public.verifycode import verify_code
 from .password_views import change_token,change_email
 from .password_views import change_password
@@ -33,7 +32,6 @@ urlpatterns = [
     path('accounts/login/', user_login, name='login'),
     path('logout/', logout_then_login, name='logout'),
     path('verify_code/', verify_code, name='verify_code'),
-    path('gettoken/', login_required(gettoken), name="gettoken"),
     path('donation/', TemplateView.as_view(template_name="manabe/donation.html"), name="donation"),
 
 ]

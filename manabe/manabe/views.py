@@ -89,25 +89,14 @@ def user_register(request):
                     login(request, user)
                     return redirect_login(request)
                 else:
-
                     error.append('密码不一致，请确认')
-                    return render(request, 'accounts/register.html', locals())
             else:
                 error.append('已存在相同用户名，请更换用户名')
-                return render(request, 'accounts/register.html', locals())
         else:
-                error.append('请确认各个输入框无误')
-                return render(request, 'accounts/register.html', locals())
+            error.append('请确认各个输入框无误')
+        return render(request, 'accounts/register.html', locals())
     else:
         form = RegisterForm()
         return render(request, 'accounts/register.html', locals())
-
-
-def gettoken(request):
-    if request.method == 'GET':
-        token_key = dict()
-        token_key["username"] = request.user.username
-        token_key["token"] = Token.objects.get(user=request.user).key
-        return JsonResponse(token_key)
 
 
