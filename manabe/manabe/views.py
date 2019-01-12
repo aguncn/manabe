@@ -4,7 +4,6 @@ import platform
 import django
 from django.views.generic.base import TemplateView
 from django.shortcuts import render, HttpResponseRedirect
-from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
@@ -12,7 +11,6 @@ from django.contrib.auth.models import User
 from appinput.models import App
 from serverinput.models import Server
 from deploy.models import DeployPool
-from rest_framework.authtoken.models import Token
 
 from .forms import LoginForm, RegisterForm
 

@@ -7,7 +7,9 @@ from appinput.forms import AppForm
 
 class AppInputCreateFormTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_superuser('root', 'root@demon.com', 'root')
+        self.user = User.objects.create_superuser('root',
+                                                  'root@demon.com',
+                                                  'root')
         admin_group = Group.objects.create(name='admin')
         admin_users = [self.user]
         admin_group.user_set.set(admin_users)
@@ -60,7 +62,7 @@ class AppInputCreateFormTests(TestCase):
         response = self.client.post(url, data)
         self.assertTrue(App.objects.exists())
 
-    def test_new_topic_invalid_post_data(self):
+    def test_new_app_invalid_post_data(self):
         url = reverse('appinput:create')
         response = self.client.post(url, {})
         form = response.context.get('form')

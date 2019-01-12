@@ -26,7 +26,8 @@ class UserListTests(TestCase):
 
     def test_user_list_url_resolves_user_view(self):
         view = resolve('/api/users/')
-        self.assertEqual(view.func.__name__, UserViewSet.as_view(({'get': 'list'})).__name__)
+        self.assertEqual(view.func.__name__,
+                         UserViewSet.as_view(({'get': 'list'})).__name__)
 
 
 class AppListTests(TestCase):
@@ -41,7 +42,8 @@ class AppListTests(TestCase):
 
     def test_app_list_url_resolves_app_view(self):
         view = resolve('/api/apps/')
-        self.assertEqual(view.func.__name__, AppViewSet.as_view(({'get': 'list'})).__name__)
+        self.assertEqual(view.func.__name__,
+                         AppViewSet.as_view(({'get': 'list'})).__name__)
 
 
 class AppCreateTests(APITestCase):

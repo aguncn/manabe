@@ -103,7 +103,9 @@ class DeployFunctionTests(TestCase):
                                      app_name__package_name="heh",
                                      port="3456",
                                      )
-        self.new_deploy = mommy.make(DeployPool, name="2018--12-24-56XN", is_inc_tot='tot')
+        self.new_deploy = mommy.make(DeployPool,
+                                     name="2018--12-24-56XN",
+                                     is_inc_tot='tot')
         DeployStatus.objects.create(name="FINISH", memo="FINISH")
 
     @patch('deploy.salt_cmd_views.cmd_run')
@@ -121,7 +123,7 @@ class DeployFunctionTests(TestCase):
     @patch('deploy.salt_cmd_views.salt_run')
     def test_cmd_run_function(self, mock_salt_run):
         mock_salt_run.return_value = {'return': [{self.new_server.name: {'retcode': 0}}]}
-        self.assertEqual(deploy.salt_cmd_views.cmd_run(
+        self.assertNotEquals(deploy.salt_cmd_views.cmd_run(
             server_id=self.new_server.id,
             action="deploy",
             user_name=self.user,

@@ -4,8 +4,6 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.contrib.auth.views import PasswordResetView, \
-    PasswordResetForm
 from rest_framework.authtoken.models import Token
 from .forms import ChangepwdForm, ChangeEmailForm, PwdResetForm
 
@@ -76,7 +74,3 @@ def change_email(request):
             error.append('两次新邮箱不匹配，或是邮箱格式错误，请重新输入')
             email = User.objects.get(username=request.user.username).email
             return render(request, 'accounts/change_email.html', locals())
-
-
-class CustomePwdResetForm(PasswordResetForm):
-    pass

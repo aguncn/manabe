@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from .views import IndexView, user_login, user_register
 from public.verifycode import verify_code
-from .password_views import change_token,change_email
+from .password_views import change_token, change_email
 from .password_views import change_password
 from django.contrib.auth.views import logout_then_login
 from rest_framework.authtoken import views

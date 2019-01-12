@@ -23,7 +23,8 @@ class ServerInputListTests(TestCase):
 
     def test_list_url_resolves_home_view(self):
         view = resolve('/server/list/')
-        self.assertEqual(view.func.__name__, ServerInputListView.as_view().__name__)
+        self.assertEqual(view.func.__name__,
+                         ServerInputListView.as_view().__name__)
 
 
 class ServerInputDetailTests(TestCase):
