@@ -24,7 +24,8 @@ package -Dmaven.test.skip=true"
                     echo 'Build end..'
                 }
             }
-        }        stage("scp package to nginx") {
+        }        
+        stage("scp package to nginx") {
             steps {
                 echo 'scp nginx begin..'
                 echo 'scp nginx end..'
